@@ -5,6 +5,7 @@
 
 """
 import os
+from random import shuffle
 from collections import defaultdict
 from Bio import SeqIO, AlignIO
 from Bio.Seq import Seq
@@ -57,6 +58,10 @@ def similarity(group, entries, grouping_keyword, alignment_path, clustalw_comman
     if len(entries) < 2:
         return None
 
+    shuffle(entries) #make sure to get random representative for each uniprot id below
+    # 0.1073502349915773
+    # 0.10291892358471445
+    # 0.10572169414369442
     if grouping_keyword == 'ec':
         if "-" in group or len(group.split(".")) != 4:
             return None
@@ -64,21 +69,23 @@ def similarity(group, entries, grouping_keyword, alignment_path, clustalw_comman
         alignment = multiple_alignment(sequences, alignment_path, 'ec_class_' + group, clustalw_command)
         alignment_dict = SeqIO.to_dict(alignment)
 
-    for entry in entries:
-        if entry.binding_site_id in used_ids:
-            continue
-        relevant_entries.append(entry)
-        used_ids.append(entry.binding_site_id)
+    # for entry in entries:
+    #     if entry.binding_site_id in used_ids:
+    #         continue
+    #     relevant_entries.append(entry)
+    #     used_ids.append(entry.binding_site_id)
 
-    if len(relevant_entries) < 2:
-        return None
-
+    # if len(relevant_entries) < 2:
+    #     return None
 
     binding_sites = []
     for i, entry in enumerate(entries):
+        if entry.binding_site_id in used_ids: #omit entries from already used uniprot ids
+            continue
+        used_ids.append(entry.binding_site_id)
         if grouping_keyword == 'ec':
-            if entry not in relevant_entries:
-                continue
+            # if entry not in relevant_entries:
+            #     continue
             entry.aligned_sequence_ec = alignment_dict.get(str(i))
 
         entry.map_binding_sites(grouping_keyword)
@@ -88,7 +95,10 @@ def similarity(group, entries, grouping_keyword, alignment_path, clustalw_comman
         elif grouping_keyword == 'ec':
             binding_sites.append(entry.mapped_sites_ec)
 
-    return multiple_similarity(binding_sites)
+    if len(binding_sites) < 2:
+        return None
+    else:
+        return (len(binding_sites), multiple_similarity(binding_sites))
 
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
@@ -127,14 +137,14 @@ def get_group_mapping(funfam_entries, groupby, limit):
             elif limit == 'ec':
                 if entry.ec_ids is None or not entry.ec_ids:
                     continue
-                if entry.binding_site_id in used_uniprot_ids[(entry.superfamily, entry.funfam)]:
-                    continue
+                # if entry.binding_site_id in used_uniprot_ids[(entry.superfamily, entry.funfam)]:
+                #     continue
                 filtered_ecs = [ec_id for ec_id in entry.ec_ids if not '-' in ec_id]
                 if not filtered_ecs:
                     continue
                 if [x for x in filtered_ecs if x in used_limit_ids[(entry.superfamily, entry.funfam)]]:
                     continue
-                used_uniprot_ids[(entry.superfamily, entry.funfam)].append(entry.binding_site_id)
+                # used_uniprot_ids[(entry.superfamily, entry.funfam)].append(entry.binding_site_id)
                 used_limit_ids[(entry.superfamily, entry.funfam)] += filtered_ecs
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
@@ -148,11 +158,11 @@ def get_group_mapping(funfam_entries, groupby, limit):
                 if limit == 'none':
                     mapping[ec_id].append(entry)
                 elif limit == 'funfam':
-                    if entry.binding_site_id in used_uniprot_ids[ec_id]:
-                        continue
+                    # if entry.binding_site_id in used_uniprot_ids[ec_id]:
+                    #     continue
                     if (entry.superfamily, entry.funfam) in used_limit_ids[ec_id]:
                         continue
-                    used_uniprot_ids[ec_id].append(entry.funfam)
+                    # used_uniprot_ids[ec_id].append(entry.funfam)
                     used_limit_ids[ec_id].append((entry.superfamily, entry.funfam))
                     mapping[ec_id].append(entry)
 

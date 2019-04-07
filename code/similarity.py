@@ -81,6 +81,7 @@ def main():
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword)
 
     similarities = []
+    num_used_entries = 0
 
     for group, entries in group_mapping.items():
         if len(entries) < 2:
@@ -90,7 +91,9 @@ def main():
                                                args.clustalw_command)))
 
     similarities = [x for x in similarities if x[1] is not None]
-    print('similarity:', np.array([x[1] for x in similarities]).mean(), 'number of groups:', len(similarities))
+    num_used_entries = sum((x[1][0] for x in similarities))
+    print('similarity:', np.array([x[1][1] for x in similarities]).mean(), 'number of groups:', len(similarities))
+    print('used entries:', num_used_entries)
 
     # mapping = defaultdict(list)
     #

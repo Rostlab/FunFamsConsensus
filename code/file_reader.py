@@ -47,7 +47,7 @@ class FunFamReader(object):
         """
         descriptors = seq_record_description.split('UNIPROT=')
         if len(descriptors) == 1:
-            raise ValueError("not UNIPROT IDs annotated")
+            raise ValueError("no UNIPROT IDs annotated")
         uniprot_ids = descriptors[1].split(';')[0].split(',')
         return uniprot_ids
 
