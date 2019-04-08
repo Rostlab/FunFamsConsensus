@@ -6,21 +6,22 @@ import os
 import argparse
 import numpy as np
 import pickle
-from itertools import groupby
+from itertools import chain
 from collections import defaultdict
 from funfam_project.code.utils import process_funfam_entries, similarity, get_group_mapping
 from funfam_project.code.file_reader import FunFamReader, read_uniprot_binding_site_mapping
 
 
 def main():
+    groups = ['funfam', 'ec']
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
-    parser.add_argument("-families", dest="family_dir", help="directory with FunFam families")
-    parser.add_argument("-sites", dest="binding_site_file", help="file with UNIPROT ID to binding site mapping")
+    parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
+    parser.add_argument("-sites", dest="binding_site_file", help="file with UNIPROT ID to binding site mapping", required=True)
     parser.add_argument("-groupby", dest="grouping_keyword",
-                        help="keyword by which sequences are grouped for similarity calculation")
+                        help="keyword by which sequences are grouped for similarity calculation", choices=groups, required=True)
     parser.add_argument("-limit", dest="limit_keyword",
-                        help="keyword by which sequences are separated for similarity calculation")
+                        help="keyword by which sequences are separated for similarity calculation", choices=groups)
     parser.add_argument("-align", dest="alignment_path",
                         help="directory to which sequence alignments will be written")
     parser.add_argument("-clustalw", dest="clustalw_command",
@@ -40,10 +41,12 @@ def main():
     funfam_entries = list()
     rejected_entries = 0
 
+    print("reading FunFam data...")
+
     # i = 0
     # j = 0
     # for superfamily in os.listdir(args.family_dir):
-    #     print('i', i, superfamily)
+    #     print('\tsuperfamily:', i, superfamily)
     #     if ".DS_Store" in superfamily:
     #         continue
     #     for funfam_file in os.listdir(os.path.join(args.family_dir, superfamily)):
@@ -83,16 +86,32 @@ def main():
     similarities = []
     num_used_entries = 0
 
+    print('number of groups:', len(group_mapping), 'number of entries:', len(set(chain(*group_mapping.values()))))
+
+    print('2.3.1.5')
+    for entry in group_mapping.get('2.3.1.5'):
+        print('\t', entry.superfamily, entry.funfam, entry.id)
+
     for group, entries in group_mapping.items():
         if len(entries) < 2:
             continue
-        print(group, len(entries))
-        similarities.append((group, similarity(group, entries, args.grouping_keyword, args.alignment_path,
-                                               args.clustalw_command)))
+        #print(group, len(entries))
+        sim = similarity(group, entries, args.grouping_keyword, args.limit_keyword, args.alignment_path,
+                                               args.clustalw_command)
+        similarities.append((group, sim))
+        # if len(sim[0]) != 1:
+        #     print(group, sim[1], len(sim[0]))
+        #     for e in sorted(sim[0]):
+        #         print('\t', e)
 
-    similarities = [x for x in similarities if x[1] is not None]
-    num_used_entries = sum((x[1][0] for x in similarities))
+    scores = np.array([x[1][1] for x in similarities if x is not None])
+    num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
+    num_used_entries = sum((len(x[1][0]) for x in similarities))
+
+    #print(scores)
+
     print('similarity:', np.array([x[1][1] for x in similarities]).mean(), 'number of groups:', len(similarities))
+    print('similarity alt.:', scores[num_members != 1].mean(), 'number of groups:', len(scores[num_members != 1]))
     print('used entries:', num_used_entries)
 
     # mapping = defaultdict(list)

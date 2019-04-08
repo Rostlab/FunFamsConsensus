@@ -32,8 +32,8 @@ def multiple_similarity(sites):
         for j in range(i + 1, len(sites)):
             scores.append(pairwise_similarity(sites[i], sites[j]))
     if len(scores) == 0:
-        print("XXXXXXXX this should not happen XXXXXXX")
-        return (0.0)
+        return 0.0
+        #raise ValueError("cannot compute similarity of zero sites")
     return (sum(scores) / len(scores))
 
 
@@ -42,8 +42,8 @@ def pairwise_similarity(sitesA, sitesB):
     returns a simple similarity score for two binding site annotations
     """
     if len(sitesA) < 1 and len(sitesB) < 1:
-        print("XXXXXXXX this should not happen pairwise XXXXXXX")
-        return (0.0)
+        return 0.0
+        #raise ValueError("cannot compute similarity of zero sites")
     sitesA = set(sitesA)
     sitesB = set(sitesB)
     intersection = sitesA.intersection(sitesB)
@@ -51,17 +51,22 @@ def pairwise_similarity(sitesA, sitesB):
     return (len(intersection) / size)
 
 
-def similarity(group, entries, grouping_keyword, alignment_path, clustalw_command):
+def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, clustalw_command):
     relevant_entries = []
     used_ids = []
 
-    if len(entries) < 2:
-        return None
+    if group == '2.3.1.5':
+        print("in similarity!")
 
-    shuffle(entries) #make sure to get random representative for each uniprot id below
+ #   if limit_keyword != 'none':
+        #to chose a random representative if multiple entries from the same limit_keyword exist
+  #      shuffle(entries)
     # 0.1073502349915773
     # 0.10291892358471445
     # 0.10572169414369442
+    # 0.10295878005760403
+    # 0.10468979312537943
+    # 0.1059672600059685
     if grouping_keyword == 'ec':
         if "-" in group or len(group.split(".")) != 4:
             return None
@@ -79,10 +84,14 @@ def similarity(group, entries, grouping_keyword, alignment_path, clustalw_comman
     #     return None
 
     binding_sites = []
+    used_entries = []
     for i, entry in enumerate(entries):
         if entry.binding_site_id in used_ids: #omit entries from already used uniprot ids
+            if group == '2.3.1.5':
+                print('discarded because used already')
             continue
         used_ids.append(entry.binding_site_id)
+        used_entries.append((entry.superfamily, entry.funfam, entry.id))
         if grouping_keyword == 'ec':
             # if entry not in relevant_entries:
             #     continue
@@ -95,10 +104,10 @@ def similarity(group, entries, grouping_keyword, alignment_path, clustalw_comman
         elif grouping_keyword == 'ec':
             binding_sites.append(entry.mapped_sites_ec)
 
-    if len(binding_sites) < 2:
-        return None
-    else:
-        return (len(binding_sites), multiple_similarity(binding_sites))
+    # if len(binding_sites) < 2:
+    #     return None
+    # else:
+    return (used_entries, multiple_similarity(binding_sites))
 
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
@@ -129,6 +138,7 @@ def get_group_mapping(funfam_entries, groupby, limit):
     mapping = defaultdict(list)
     used_uniprot_ids = defaultdict(list)
     used_limit_ids = defaultdict(list)
+    shuffle(funfam_entries)
 
     if groupby == 'funfam':
         for entry in funfam_entries:
