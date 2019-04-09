@@ -2,6 +2,7 @@
 class that represents FunFam entries
 """
 
+
 class FunFamEntry(object):
 
     def __init__(self, id, funfam, superfamily, start, end, uniprot_ids, ec_ids, sequence, sequence_aligned_by_funfam):
@@ -52,7 +53,7 @@ class FunFamEntry(object):
 
         if i > 1:
             print("ambiguity processing sites:", self.id, self.funfam, self.superfamily)
-            #print(self.sites)
+            # print(self.sites)
             # raise ValueError("multiple binding site annotations for entry")
             return (False)
         if relevant_sites is None:
@@ -72,7 +73,6 @@ class FunFamEntry(object):
         elif group == "funfam":
             print("mapped sites funfam:", self.mapped_sites_funfam)
         print("ec numbers:", self.ec_ids)
-
 
     def map_binding_sites(self, group):
         '''maps binding sites from the sequence to the ec alignment level'''

@@ -6,8 +6,8 @@ from Bio import SeqIO
 
 GAP_CHARACTER = '-'
 
-class FunFamReader(object):
 
+class FunFamReader(object):
     """reads a FunFam file in .aln format and creates a list of FunFamEntry objects from it
     note: individual entries are omitted if they have no UNIPROT ID in the header
     """
@@ -25,7 +25,7 @@ class FunFamReader(object):
                 uniprot_ids = self.get_uniprot_ids(seq_record.description)
                 ec_ids = self.get_ec_ids(seq_record.description)
                 unique_id = seq_record.id.split('|')[2].split('/')[0]
-                start,end = self.get_sequence_range(seq_record.id)
+                start, end = self.get_sequence_range(seq_record.id)
                 sequence_aligned_by_funfam = seq_record.seq
                 sequence = seq_record.seq.ungap(GAP_CHARACTER)
                 if len(sequence) != end - start + 1:
@@ -34,11 +34,12 @@ class FunFamReader(object):
 
             except ValueError as e:
                 self.num_rejected_entries += 1
-                #print('[FunFamReader]:\t rejected an entry when reading!', e)
+                # print('[FunFamReader]:\t rejected an entry when reading!', e)
                 continue
 
-            #print('[FunFamReader]:\t','accepted an entry!')
-            entry = FunFamEntry(unique_id, self.funfam, self.superfamily, start, end, uniprot_ids, ec_ids, sequence, sequence_aligned_by_funfam)
+            # print('[FunFamReader]:\t','accepted an entry!')
+            entry = FunFamEntry(unique_id, self.funfam, self.superfamily, start, end, uniprot_ids, ec_ids, sequence,
+                                sequence_aligned_by_funfam)
             self.entries.append(entry)
 
     def get_uniprot_ids(self, seq_record_description):
@@ -74,7 +75,8 @@ class FunFamReader(object):
             # raise error for unexpected characters
             raise ValueError("failed to parse sequence range")
         start, end = map(int, seq_range.split('-'))
-        return start,end
+        return start, end
+
 
 def read_uniprot_binding_site_mapping(file):
     uniprot_binding_site_mapping = dict()

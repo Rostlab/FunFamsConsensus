@@ -28,6 +28,7 @@ def main():
                         help="directory to which sequence alignments will be written")
     parser.add_argument("-clustalw", dest="clustalw_command",
                         help="command to call clustalw on this system")
+    parser.add_argument("-pickle", dest="pickle_file", help="for debugging: read FunFam data from pickle file")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -43,45 +44,45 @@ def main():
     funfam_entries = list()
     rejected_entries = 0
 
-    print("reading FunFam data...")
+    if args.pickle_file is None:
+        print("reading FunFam data...")
+        i = 0
+        j = 0
+        for superfamily in os.listdir(args.family_dir):
+            print('\tsuperfamily:', i, superfamily)
+            if ".DS_Store" in superfamily:
+                continue
+            for funfam_file in os.listdir(os.path.join(args.family_dir, superfamily)):
+                # print('\tj', j, funfam_file)
+                if ".DS_Store" in funfam_file:
+                    continue
+                funfam = funfam_file.split(".")[0]
+                reader = FunFamReader(os.path.join(args.family_dir, superfamily, funfam_file), superfamily, funfam)
+                reader.read()
+                rejected_entries += reader.num_rejected_entries
+                # print('\tnumber of read entries:', len(reader.entries))
+                new_entries = process_funfam_entries(reader.entries, uniprot_binding_site_mapping)
+                # print('\tnumber of accepted entries:', len(new_entries))
+                funfam_entries += new_entries
+                j += 1
+                # if len(funfam_entries) >= 100:
+                #     break
+            i += 1
+            # if len(funfam_entries) >= 100:
+            #     break
 
-    # i = 0
-    # j = 0
-    # for superfamily in os.listdir(args.family_dir):
-    #     print('\tsuperfamily:', i, superfamily)
-    #     if ".DS_Store" in superfamily:
-    #         continue
-    #     for funfam_file in os.listdir(os.path.join(args.family_dir, superfamily)):
-    #         # print('\tj', j, funfam_file)
-    #         if ".DS_Store" in funfam_file:
-    #             continue
-    #         funfam = funfam_file.split(".")[0]
-    #         reader = FunFamReader(os.path.join(args.family_dir, superfamily, funfam_file), superfamily, funfam)
-    #         reader.read()
-    #         rejected_entries += reader.num_rejected_entries
-    #         # print('\tnumber of read entries:', len(reader.entries))
-    #         new_entries = process_funfam_entries(reader.entries, uniprot_binding_site_mapping)
-    #         # print('\tnumber of accepted entries:', len(new_entries))
-    #         funfam_entries += new_entries
-    #         j += 1
-    #         # if len(funfam_entries) >= 100:
-    #         #     break
-    #     i += 1
-    #     # if len(funfam_entries) >= 100:
-    #     #     break
-    #
-    # print('superfamilies:', i, 'funfams:', j, 'found entries:', len(funfam_entries), 'unique:',
-    #       len(set(funfam_entries)))
-    # print('rejected entries:', rejected_entries)
+        print('superfamilies:', i, 'funfams:', j, 'found entries:', len(funfam_entries), 'unique:',
+              len(set(funfam_entries)))
+        print('rejected entries:', rejected_entries)
 
-    pickle_file = 'C:\\Users\\Linus\\LRZ Sync+Share\\UniversitätMünchen\\Bioinformatik\\6. Semester\\Bachelorarbeit\\funfam_project\\data\\ff2.p'
     # print('start serializing funfams')
     # pickle.dump(funfam_entries, open(pickle_file, 'wb'))
     # print('done serializing funfams')
 
-    print("reading pickle...")
-    funfam_entries = pickle.load(open(pickle_file, 'rb'))
-    print("done reading.")
+    else:
+        print("reading pickle...")
+        funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
+        print("done reading.")
 
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword)
 
