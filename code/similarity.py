@@ -17,9 +17,11 @@ def main():
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
     parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
-    parser.add_argument("-sites", dest="binding_site_file", help="file with UNIPROT ID to binding site mapping", required=True)
+    parser.add_argument("-sites", dest="binding_site_file", help="file with UNIPROT ID to binding site mapping",
+                        required=True)
     parser.add_argument("-groupby", dest="grouping_keyword",
-                        help="keyword by which sequences are grouped for similarity calculation", choices=groups, required=True)
+                        help="keyword by which sequences are grouped for similarity calculation", choices=groups,
+                        required=True)
     parser.add_argument("-limit", dest="limit_keyword",
                         help="keyword by which sequences are separated for similarity calculation", choices=groups)
     parser.add_argument("-align", dest="alignment_path",
@@ -86,47 +88,22 @@ def main():
     similarities = []
     num_used_entries = 0
 
-    print('number of groups:', len(group_mapping), 'number of entries:', len(set(chain(*group_mapping.values()))))
-
-    print('2.3.1.5')
-    for entry in group_mapping.get('2.3.1.5'):
-        print('\t', entry.superfamily, entry.funfam, entry.id)
+    print('number of groups:', len(group_mapping), '\nnumber of entries:', len(set(chain(*group_mapping.values()))))
 
     for group, entries in group_mapping.items():
         if len(entries) < 2:
             continue
-        #print(group, len(entries))
+
         sim = similarity(group, entries, args.grouping_keyword, args.limit_keyword, args.alignment_path,
-                                               args.clustalw_command)
+                         args.clustalw_command)
         similarities.append((group, sim))
-        # if len(sim[0]) != 1:
-        #     print(group, sim[1], len(sim[0]))
-        #     for e in sorted(sim[0]):
-        #         print('\t', e)
 
     scores = np.array([x[1][1] for x in similarities if x is not None])
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
     num_used_entries = sum((len(x[1][0]) for x in similarities))
 
-    #print(scores)
-
-    print('similarity:', np.array([x[1][1] for x in similarities]).mean(), 'number of groups:', len(similarities))
-    print('similarity alt.:', scores[num_members != 1].mean(), 'number of groups:', len(scores[num_members != 1]))
+    print('similarity:', scores[num_members != 1].mean(), '\nnumber of groups:', len(scores[num_members != 1]))
     print('used entries:', num_used_entries)
-
-    # mapping = defaultdict(list)
-    #
-    #     # num_rejected = 0
-    #     # data = sorted(funfam_entries, key=grouping_function)
-    #     # for k, g in groupby(data, grouping_function):
-    #     #     entries = list(g)
-    #     #     if len(entries) < 2:
-    #     #         num_rejected += 1
-    #     #         continue
-    #     #     similarities.append((k,similarity(k, entries, args.grouping_keyword)))
-    #     #     mapping[k] = entries
-
-    # print('number of rejected groups:', num_rejected)
 
 
 if __name__ == '__main__': main()

@@ -138,11 +138,13 @@ def get_group_mapping(funfam_entries, groupby, limit):
     mapping = defaultdict(list)
     used_uniprot_ids = defaultdict(list)
     used_limit_ids = defaultdict(list)
-    shuffle(funfam_entries)
+
+    if limit is not None:
+        shuffle(funfam_entries)
 
     if groupby == 'funfam':
         for entry in funfam_entries:
-            if limit == 'none':
+            if limit is None:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
             elif limit == 'ec':
                 if entry.ec_ids is None or not entry.ec_ids:
@@ -165,7 +167,7 @@ def get_group_mapping(funfam_entries, groupby, limit):
             for ec_id in entry.ec_ids:
                 if "-" in ec_id or len(ec_id.split(".")) != 4:
                     continue
-                if limit == 'none':
+                if limit is None:
                     mapping[ec_id].append(entry)
                 elif limit == 'funfam':
                     # if entry.binding_site_id in used_uniprot_ids[ec_id]:
