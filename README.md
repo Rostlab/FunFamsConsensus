@@ -1,6 +1,6 @@
-#Usage
-##Computing binding residue similarity
+# Usage
+## Computing binding residue similarity
 
-##BindPredict-CCS
+## BindPredict-CCS
 
-##BindPredict-CC
+## BindPredict-CC
