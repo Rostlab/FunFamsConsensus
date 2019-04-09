@@ -10,8 +10,8 @@ The python program `similarity.py` has the following command line parameters:
 * `-groupby` [funfam|ec]  
     the way in which the sequences should be grouped for similarity computations.
 * `-limit` [funfam|ec]   optional  
-    the groups which should not occurr multiple times within the group specified by `groupby`
+    the groups which should not occur multiple times within the group specified by `groupby`
 * `-align`               optional  
     the path to a directory in which data for the generation of multiple sequence alignments can be stored
 * `-clustalw`            optional  
-    the command to call the clustalw MSE tool, necessary only if `groupby` == ec
+    the command to call the external clustalw MSE tool, necessary only if `groupby` == ec
