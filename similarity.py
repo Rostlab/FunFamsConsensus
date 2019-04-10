@@ -8,8 +8,8 @@ import numpy as np
 import pickle
 from itertools import chain
 from collections import defaultdict
-from funfam_project.code.utils import process_funfam_entries, similarity, get_group_mapping
-from funfam_project.code.file_reader import FunFamReader, read_uniprot_binding_site_mapping
+from funfam_project.code_similarity.utils import process_funfam_entries, similarity, get_group_mapping
+from funfam_project.code_similarity.file_reader import FunFamReader, read_uniprot_binding_site_mapping
 
 
 def main():
