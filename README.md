@@ -29,7 +29,7 @@ This repository provides functionality to compute the binding residue similarity
 * `-mapping`  
     path to a file with a mapping of FunFams to UNIPROT IDs.
 * `-evc_info`  
-    path to a directory with output files from EVcouplings (\_final.outcfg, .alignment_statistics.csv), FreeContact (.di) as well as BindPredict (.cum_scores, .cluster_coeff). Data for each UNIPROT ID ought to be in a seperate subdirectory.
+    path to a directory with output files from [EVcouplings](http://evfold.org/evfold-web/newmarkec.do) (\_final.outcfg, .alignment_statistics.csv), [FreeContact](https://rostlab.org/owiki/index.php/FreeContact) (.di) as well as [bindPredict](https://github.com/Rostlab/bindPredict) (.cum_scores, .cluster_coeff). Data for each UNIPROT ID ought to be in a seperate subdirectory.
 * `-funfam_data`  
     path to a file in FASTA FunFam format including mapped binding sites for each entry.
 * `-families`  
