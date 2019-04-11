@@ -18,21 +18,22 @@ This repository provides functionality to compute the binding residue similarity
 
 ## Build and evaluate consensus prediction
 `prediction.py` has the following command line parameters:
-* `-consensus`
+* `-consensus`  
     the consensus cut-off at positions are classified as binding.
-* `cc`
+* `cc`  
     the cut-off above which a position is classified as binding by its clustering coefficient.
-* `ccs`
+* `ccs`  
     the cut-off above which a position is classified as binding by its cumulative coupling score.
-* `uniprot_ids`
+* `uniprot_ids`  
     path to a file containing all UNIPROT IDs for which data is available, one id per line.
-* `mapping`
+* `mapping`  
     path to a file with a mapping of FunFams to UNIPROT IDs.
-* `evc_info`
+* `evc_info`  
     path to a directory with output files from EVcouplings (\_final.outcfg, .alignment_statistics.csv), FreeContact (.di) as well as BindPredict (.cum_scores, .cluster_coeff). Data for each UNIPROT ID ought to be in a seperate subdirectory.
-* `funfam_data`
+* `funfam_data`  
     path to a file in FASTA FunFam format including mapped binding sites for each entry.
-* `families`
+* `families`  
     the path to a directory containing the FunFam dataset (with one sub-directory per superfamily).
-* `out`
+* `out`  
     the path to a directory to which output files will be written.
+    
