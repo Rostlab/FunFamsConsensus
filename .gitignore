@@ -1,5 +1,4 @@
 code_similarity/test.py
-code_prediction/
 *.aln
 *.dnd
 *.fasta
