@@ -1,4 +1,5 @@
 code_similarity/test.py
+*.sh
 *.aln
 *.dnd
 *.fasta
