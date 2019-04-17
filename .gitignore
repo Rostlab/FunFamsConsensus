@@ -1,4 +1,4 @@
-code_similarity/test.py
+/code_similarity/test.py
 *.sh
 *.aln
 *.dnd
