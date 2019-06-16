@@ -2,6 +2,12 @@
 launch the similarity computation of binding residues
 """
 
+#to use precalculated representation of the funfam data:
+#-pickle
+#"C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\funfam_project\data\ff2.p"
+#-limit
+#"funfam"
+
 import os
 import argparse
 import numpy as np
@@ -66,7 +72,8 @@ def main():
                 # print('\tnumber of accepted entries:', len(new_entries))
                 funfam_entries += new_entries
                 for entry in new_entries:
-                    uniprot_ids.add(entry.uniprot_ids)
+                    for u_id_entry in entry.uniprot_ids:
+                        uniprot_ids.add(u_id_entry)
                 j += 1
                 # if len(funfam_entries) >= 100:
                 #     break
@@ -87,9 +94,9 @@ def main():
         funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
         print("done reading.")
 
-    with open('used_uniprot_ids_similarity', 'a') as the_file:
-        for u_id in uniprot_ids:
-            the_file.write(u_id+'\n')
+    # with open('used_uniprot_ids_similarity', 'a') as the_file:
+    #     for u_id in uniprot_ids:
+    #         the_file.write(u_id+'\n')
 
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword)
 

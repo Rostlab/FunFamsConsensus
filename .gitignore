@@ -1,3 +1,4 @@
+/code_similarity/__pycache__/*
 /code_similarity/test.py
 *.sh
 *.aln
