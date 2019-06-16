@@ -80,6 +80,8 @@ class FunFamEntry(object):
             sequence = self.aligned_sequence_funfam
         elif group == "ec":
             sequence = self.aligned_sequence_ec
+        elif group == "pfam":
+            sequence = self.aligned_sequence_pfam
         else:
             raise ValueError("group has to be funfam or ec")
 
@@ -100,3 +102,5 @@ class FunFamEntry(object):
             self.mapped_sites_funfam = out
         elif group == "ec":
             self.mapped_sites_ec = out
+        elif group == "pfam":
+            self.mapped_sites_pfam = out

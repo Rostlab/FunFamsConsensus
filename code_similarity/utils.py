@@ -61,6 +61,11 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
         alignment = multiple_alignment(sequences, alignment_path, 'ec_class_' + group, clustalw_command)
         alignment_dict = SeqIO.to_dict(alignment)
 
+    if grouping_keyword == 'pfam':
+        sequences = [entry.sequence for entry in entries]
+        alignment = multiple_alignment(sequences, alignment_path, 'pfam_family_' + group, clustalw_command)
+        alignment_dict = SeqIO.to_dict(alignment)
+
     binding_sites = []
     used_entries = []
     for i, entry in enumerate(entries):
@@ -70,6 +75,8 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
         used_entries.append((entry.superfamily, entry.funfam, entry.id))
         if grouping_keyword == 'ec':
             entry.aligned_sequence_ec = alignment_dict.get(str(i))
+        if grouping_keyword == 'pfam':
+            entry.aligned_sequence_pfam = alignment_dict.get(str(i))
 
         entry.map_binding_sites(grouping_keyword)
 
@@ -77,6 +84,8 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
             binding_sites.append(entry.mapped_sites_funfam)
         elif grouping_keyword == 'ec':
             binding_sites.append(entry.mapped_sites_ec)
+        elif grouping_keyword == 'pfam':
+            binding_sites.append(entry.mapped_sites_pfam)
 
     return (used_entries, multiple_similarity(binding_sites))
 
@@ -100,7 +109,7 @@ def multiple_alignment(sequences, path, group_id, clustalw_command):
     return (align)
 
 
-def get_group_mapping(funfam_entries, groupby, limit):
+def get_group_mapping(funfam_entries, groupby, limit, pfam_file):
     mapping = defaultdict(list)
     used_uniprot_ids = defaultdict(list)
     used_limit_ids = defaultdict(list)
@@ -143,6 +152,21 @@ def get_group_mapping(funfam_entries, groupby, limit):
                     # used_uniprot_ids[ec_id].append(entry.funfam)
                     used_limit_ids[ec_id].append((entry.superfamily, entry.funfam))
                     mapping[ec_id].append(entry)
+
+    elif groupby == 'pfam':
+        uniprot_pfam_mapping = read_uniprot_pfam_mapping(pfam_file)
+        for entry in funfam_entries:
+            pfam_ids_to_add = set()
+            pfam_set = uniprot_pfam_mapping.get(entry.binding_site_id)
+            if pfam_set is None:
+                continue
+            for start,end,pfam_id in pfam_set:
+                start = int(start)
+                end = int(end)
+                if start >= entry.start and end <= entry.end:
+                    pfam_ids_to_add.add(pfam_id)
+            for pfam_id in pfam_ids_to_add:
+                mapping[pfam_id].append(entry)
 
     return mapping
 

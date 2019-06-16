@@ -19,7 +19,7 @@ from funfam_project.code_similarity.file_reader import FunFamReader, read_unipro
 
 
 def main():
-    groups = ['funfam', 'ec']
+    groups = ['funfam', 'ec', 'pfam']
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
     parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
@@ -35,6 +35,7 @@ def main():
     parser.add_argument("-clustalw", dest="clustalw_command",
                         help="command to call clustalw on this system")
     parser.add_argument("-pickle", dest="pickle_file", help="for debugging: read FunFam data from pickle file")
+    parser.add_argument("-pfam_map", dest="uniprot_pfam_file", help="if groupby == pfam")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -85,20 +86,20 @@ def main():
               len(set(funfam_entries)))
         print('rejected entries:', rejected_entries)
 
-    # print('start serializing funfams')
-    # pickle.dump(funfam_entries, open(pickle_file, 'wb'))
-    # print('done serializing funfams')
-
     else:
         print("reading pickle...")
         funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
         print("done reading.")
 
+    # print('start serializing funfams')
+    # pickle.dump(funfam_entries, open('data\\ff3.p', 'wb'))
+    # print('done serializing funfams')
+
     # with open('used_uniprot_ids_similarity', 'a') as the_file:
     #     for u_id in uniprot_ids:
     #         the_file.write(u_id+'\n')
 
-    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword)
+    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file)
 
     similarities = []
     num_used_entries = 0
