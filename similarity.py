@@ -43,6 +43,7 @@ def main():
     uniprot_binding_site_mapping = read_uniprot_binding_site_mapping(args.binding_site_file)
     funfam_entries = list()
     rejected_entries = 0
+    uniprot_ids = set()
 
     if args.pickle_file is None:
         print("reading FunFam data...")
@@ -64,6 +65,8 @@ def main():
                 new_entries = process_funfam_entries(reader.entries, uniprot_binding_site_mapping)
                 # print('\tnumber of accepted entries:', len(new_entries))
                 funfam_entries += new_entries
+                for entry in new_entries:
+                    uniprot_ids.add(entry.uniprot_ids)
                 j += 1
                 # if len(funfam_entries) >= 100:
                 #     break
@@ -83,6 +86,10 @@ def main():
         print("reading pickle...")
         funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
         print("done reading.")
+
+    with open('used_uniprot_ids_similarity', 'a') as the_file:
+        for u_id in uniprot_ids:
+            the_file.write(u_id+'\n')
 
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword)
 
