@@ -145,3 +145,19 @@ def get_group_mapping(funfam_entries, groupby, limit):
                     mapping[ec_id].append(entry)
 
     return mapping
+
+
+def read_uniprot_pfam_mapping(file):
+    uniprot_pfam_mapping = defaultdict(set)
+
+    with open(file, "r") as f:
+        for line in f:
+            line = line.strip()
+            line_split = line.split("\t")
+            uniprot_id = line_split[0]
+            start, end = map(int, line_split[1].split(','))
+            pfam_id = line_split[2]
+
+            uniprot_pfam_mapping[uniprot_id].add((start, end, pfam_id))
+
+    return uniprot_pfam_mapping
