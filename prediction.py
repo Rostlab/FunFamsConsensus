@@ -87,6 +87,8 @@ def main():
         # get FunFam annotation for given uniprot_id + segment
         entry_info = sequence_funfam_mapping.get((uniprot_id_without_region, start_region, end_region))
 
+        # on our structure, else: just args.evc_info_dir
+        basepath_add_to_funfam = args.evc_info_dir + '/score_calculations/'
         # protein is in trimmed_dataset_160_with_sites.csv and has binding site annotation
         if entry_info is not None:
             superfamily, funfam, sites, aligned_sequence = entry_info
@@ -96,8 +98,7 @@ def main():
                 # sequence and region length differ, omit sequence
                 continue
 
-            #on our structure, else: just args.evc_info_dir
-            basepath_add_to_funfam = args.evc_info_dir + '/score_calculations/'
+
             if not add_protein_to_funfam(basepath_add_to_funfam, funfams, args.cons_cutoff, sites, superfamily, uniprot_id,
                                          aligned_sequence, funfam, start_region, end_region, start_segment, end_segment,
                                          evc_positions, di_positions, binding_annotation, start_seq, end_seq,
