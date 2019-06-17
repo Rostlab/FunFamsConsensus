@@ -169,7 +169,7 @@ def main():
     evaluation_consensus_annotation = pd.DataFrame(index=index,
                                                    columns=["FunFam", "members", "prec_cons_annot", "cov_cons_annot",
                                                             "F1_cons_annot", "acc_cons_annot", "mcc_cons_annot"])
-
+    auroc_values = []
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -178,6 +178,8 @@ def main():
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
         funfam.evaluation()
+        #todo
+        #auroc_values.append(funfam.compute_auroc())
 
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)

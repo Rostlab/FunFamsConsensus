@@ -258,8 +258,15 @@ class FunFam:
                     self.members_with_no_correct_prediction_clust.append(0)
         return (sum(fraction_correct_per_member) / len(fraction_correct_per_member))
 
-    def compute_auroc(self, annotation, scores):
-        return roc_auc_score(annotation, scores)
+    def compute_auroc(self):
+        values = pd.DataFrame(columns=['cum','clust','cum_cons','clust_cons'])
+        for i,member in enumerate(self.members):
+            pass
+            #todo
+            #scores_cum = map_to_sequence(self.predictions_cum_scores[member.id])
+            #roc_auc_score(annotation, scores_x)
+            #values[i]
+        return values
 
     def compute_eval(self, predictions, annotation):
         trues = sum(predictions)
