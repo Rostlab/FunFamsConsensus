@@ -270,7 +270,7 @@ class FunFam:
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
-        mcc = (tp * tn - fp * fn) / ((tp + fp) * (tp + fn) * (tn + fp)(tn + fn)) ** (1 / 2)
+        mcc = (tp * tn - fp * fn) / ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn)) ** (0.5)
 
         prec_skl = precision_score(annotation, predictions)
         cov_skl = recall_score(annotation, predictions)
