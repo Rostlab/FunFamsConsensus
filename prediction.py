@@ -156,16 +156,16 @@ def main():
                                             'Cov_cum_cons', 'Cov_clust', 'Cov_clust_cons'])
     evaluation_per_seq = pd.DataFrame(index=list(range(1, length + 1)),
                                       columns=["FunFam", "protein", 'F1_cum_base', 'F1_clust_base', 'prec_cum',
-                                               'cov_cum', 'F1_cum', 'prec_clust', 'cov_clust', 'F1_clust'])
+                                               'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust'])
     evaluation_new_consensus = pd.DataFrame(index=index, columns=['FunFam', 'members', 'prec_cum_base', 'cov_cum_base',
                                                                   'F1_cum_base', 'prec_cum_min', 'cov_cum_min',
-                                                                  'F1_cum_min', 'prec_cum_mean', 'cov_cum_mean',
-                                                                  'F1_cum_mean', 'prec_cum_max', 'cov_cum_max',
-                                                                  'F1_cum_max', 'prec_clust_base', 'cov_clust_base',
+                                                                  'F1_cum_min', 'acc_cum_min', 'mcc_cum_min', 'prec_cum_mean', 'cov_cum_mean',
+                                                                  'F1_cum_mean', 'acc_cum_mean', 'mcc_cum_mean', 'prec_cum_max', 'cov_cum_max',
+                                                                  'F1_cum_max', 'acc_cum_max', 'mcc_cum_max', 'prec_clust_base', 'cov_clust_base',
                                                                   'F1_clust_base', 'prec_clust_min', 'cov_clust_min',
-                                                                  'F1_clust_min', 'prec_clust_mean', 'cov_clust_mean',
-                                                                  'F1_clust_mean', 'prec_clust_max', 'cov_clust_max',
-                                                                  'F1_clust_max'])
+                                                                  'F1_clust_min', 'acc_clust_min', 'mcc_clust_min', 'prec_clust_mean', 'cov_clust_mean',
+                                                                  'F1_clust_mean', 'acc_clust_mean', 'mcc_clust_mean', 'prec_clust_max', 'cov_clust_max',
+                                                                  'F1_clust_max', 'acc_clust_max', 'mcc_clust_max'])
     evaluation_consensus_annotation = pd.DataFrame(index=index,
                                                    columns=["FunFam", "members", "prec_cons_annot", "cov_cons_annot",
                                                             "F1_cons_annot"])
