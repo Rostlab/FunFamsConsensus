@@ -3,8 +3,8 @@ import sys
 import math
 import pandas as pd
 import numpy as np
-from funfam_project.code_prediction.protein import Protein
-from funfam_project.code_prediction.funfam import FunFam
+from FunFams.code_prediction.protein import Protein
+from FunFams.code_prediction.funfam import FunFam
 from Bio import SeqIO, AlignIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord

@@ -2,7 +2,7 @@ import os
 import argparse
 import pandas as pd
 import numpy as np
-from funfam_project.code_prediction.prediction_utils import get_sequence_funfam_mapping, uniprot_funfam160_mapping, \
+from FunFams.code_prediction.prediction_utils import get_sequence_funfam_mapping, uniprot_funfam160_mapping, \
     get_valid_ids, check_alignment_quality, get_focus_region, get_focus_segment, get_evcouplings_positions, \
     get_di_positions, check_region_sequence_length, add_protein_to_funfam, get_funfam_sequence_info, standard_error
 
