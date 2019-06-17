@@ -168,7 +168,7 @@ def main():
                                                                   'F1_clust_max', 'acc_clust_max', 'mcc_clust_max'])
     evaluation_consensus_annotation = pd.DataFrame(index=index,
                                                    columns=["FunFam", "members", "prec_cons_annot", "cov_cons_annot",
-                                                            "F1_cons_annot"])
+                                                            "F1_cons_annot", "acc_cons_annot", "mcc_cons_annot"])
 
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
@@ -250,6 +250,7 @@ def main():
         j += len(funfam.evaluation['F1_cum'])
         i += 1
 
+    print('mean of: precision, coverage, F1 score, accuracy, mcc for cum and clust')
     print('\t'.join(map(str, evaluation_means.mean())))
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
