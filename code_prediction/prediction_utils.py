@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 from Bio import SeqIO
 from collections import defaultdict
-from FunFams.code_prediction.funfam import FunFam
-from FunFams.code_prediction.protein import Protein
+from code_prediction.funfam import FunFam
+from code_prediction.protein import Protein
 
 
 def get_sequence_funfam_mapping(file):
