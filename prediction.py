@@ -96,7 +96,9 @@ def main():
                 # sequence and region length differ, omit sequence
                 continue
 
-            if not add_protein_to_funfam(args.evc_info_dir, funfams, args.cons_cutoff, sites, superfamily, uniprot_id,
+            #on our structure, else: just args.evc_info_dir
+            basepath_add_to_funfam = args.evc_info_dir + '/score_calculations/'
+            if not add_protein_to_funfam(basepath_add_to_funfam, funfams, args.cons_cutoff, sites, superfamily, uniprot_id,
                                          aligned_sequence, funfam, start_region, end_region, start_segment, end_segment,
                                          evc_positions, di_positions, binding_annotation, start_seq, end_seq,
                                          args.cum_cutoff, args.clust_cutoff):
@@ -119,7 +121,7 @@ def main():
                     # evcouplings segment is smaller than FunFam sequence region, omit sequence
                     continue
 
-                if not add_protein_to_funfam(args.evc_info_dir, funfams, args.cons_cutoff, sites, superfamily,
+                if not add_protein_to_funfam(basepath_add_to_funfam, funfams, args.cons_cutoff, sites, superfamily,
                                              uniprot_id,
                                              aligned_sequence, funfam, start_region, end_region, start_segment,
                                              end_segment, evc_positions, di_positions, binding_annotation, start_seq,
