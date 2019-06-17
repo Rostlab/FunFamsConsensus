@@ -10,10 +10,10 @@ from code_prediction.prediction_utils import get_sequence_funfam_mapping, unipro
 def main():
     usage_string = 'python prediction.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
-    parser.add_argument("-consensus", dest="cons_cutoff", help="consensus cutoff", required=True)
-    parser.add_argument("-cc", dest="clust_cutoff", help="clustering coefficient cutoff")
+    parser.add_argument("-consensus", dest="cons_cutoff", help="consensus cutoff", required=True, type=float)
+    parser.add_argument("-cc", dest="clust_cutoff", help="clustering coefficient cutoff", type=float)
     parser.add_argument("-ccs", dest="cum_cutoff",
-                        help="cumulative coupling score cutoff")
+                        help="cumulative coupling score cutoff", type=float)
     parser.add_argument("-uniprot_ids", dest="uniprot_ids",
                         help="list of UNIPROT IDs to be processed", required=True)
     parser.add_argument("-mapping", dest="funfam_uniprot_mapping",
