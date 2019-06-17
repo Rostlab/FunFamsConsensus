@@ -137,7 +137,7 @@ def main():
     columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
     evaluation_means = pd.DataFrame(index=index, columns=columns)
     evaluation_means_no_cons = pd.DataFrame(index=index, columns=columns)
-    evaluation_means_consensus_annotation = pd.DataFrame(index=index, columns=["precision", "coverage", "F1"])
+    evaluation_means_consensus_annotation = pd.DataFrame(index=index, columns=["precision", "coverage", "F1", "acc", "mcc"])
     num_predicted_binding_sites_cum = []
     num_predicted_binding_sites_clust = []
     fract_correct_cum = []
