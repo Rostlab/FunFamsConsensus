@@ -134,7 +134,7 @@ def main():
     j = 0
     eval_per_seq_entries = 0
     index = list(range(1, len(funfams.keys()) + 1))
-    columns = ['prec_cum', 'cov_cum', 'F1_cum', 'prec_clust', 'cov_clust', 'F1_clust']
+    columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
     evaluation_means = pd.DataFrame(index=index, columns=columns)
     evaluation_means_no_cons = pd.DataFrame(index=index, columns=columns)
     evaluation_means_consensus_annotation = pd.DataFrame(index=index, columns=["precision", "coverage", "F1"])
@@ -226,7 +226,7 @@ def main():
         for k, member in enumerate(funfam.members):
             try:
                 evaluation_per_seq.loc[eval_per_seq_entries] = [funfam.name, member.id, member.evaluation_values[2],
-                                                                member.evaluation_values[5],
+                                                                member.evaluation_values[7],
                                                                 *member.evaluation_consensus]
                 eval_per_seq_entries += 1
             except AttributeError as e:

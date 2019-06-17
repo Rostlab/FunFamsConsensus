@@ -274,24 +274,26 @@ class FunFam:
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
         mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
 
-        prec_skl = precision_score(annotation, predictions)
-        cov_skl = recall_score(annotation, predictions)
-        F1_skl = f1_score(annotation, predictions)
-        acc_skl = accuracy_score(annotation, predictions)
-        mcc_skl = matthews_corrcoef(annotation, predictions)
+        #auroc = roc_auc_score(annotation, predictions)
+
+        # prec_skl = precision_score(annotation, predictions)
+        # cov_skl = recall_score(annotation, predictions)
+        # F1_skl = f1_score(annotation, predictions)
+        # acc_skl = accuracy_score(annotation, predictions)
+        # mcc_skl = matthews_corrcoef(annotation, predictions)
 
         #if prec_skl != prec:
         #   print("Warning, different precision computed!:", prec_skl, prec)
-        if cov_skl != cov:
-            print("Warning, different coverage computed!:", cov_skl, cov)
-        if F1_skl != F1:
-            print("Warning, different F1 score computed!:", F1_skl, F1)
-        if acc_skl != acc:
-            print("Warning, different accuracy computed!:", acc_skl, acc)
-        if mcc_skl != mcc:
-            print("Warning, different mcc computed!:", mcc_skl, mcc)
+        # if cov_skl != cov:
+        #     print("Warning, different coverage computed!:", cov_skl, cov)
+        # if F1_skl != F1:
+        #     print("Warning, different F1 score computed!:", F1_skl, F1)
+        # if acc_skl != acc:
+        #     print("Warning, different accuracy computed!:", acc_skl, acc)
+        # if mcc_skl != mcc:
+        #     print("Warning, different mcc computed!:", mcc_skl, mcc)
 
-        return ([prec, cov, F1])
+        return ([prec, cov, F1, acc, mcc])
 
     def map_from_alignment_to_sequence(self, aligned_sequence, scores):
         # print(self.name)
@@ -324,7 +326,7 @@ class FunFam:
         # evaluation on basis of aligned sequence, instead map to sequence without gaps/discard predictions for gaps
         # binding_sites are at alignment level!
         #########
-        columns = ['prec_cum', 'cov_cum', 'F1_cum', 'prec_clust', 'cov_clust', 'F1_clust']
+        columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
         index = self.binding_sites.columns[1:]
 
         for member in self.members:
