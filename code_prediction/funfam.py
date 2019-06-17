@@ -258,6 +258,9 @@ class FunFam:
                     self.members_with_no_correct_prediction_clust.append(0)
         return (sum(fraction_correct_per_member) / len(fraction_correct_per_member))
 
+    def compute_auroc(self, annotation, scores):
+        return roc_auc_score(annotation, scores)
+
     def compute_eval(self, predictions, annotation):
         trues = sum(predictions)
         falses = sum((predictions == False))
@@ -272,8 +275,8 @@ class FunFam:
         acc = (tp + tn) / (tp + tn + fp + fn)
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
-
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 1
+        #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
         # prec_skl = precision_score(annotation, predictions)
