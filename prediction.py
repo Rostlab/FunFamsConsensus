@@ -191,7 +191,7 @@ def main():
         if not os.path.exists(os.path.join(args.output_dir, "funfams", ff_id)):
             os.makedirs(os.path.join(args.output_dir, "funfams", ff_id))
 
-        funfam.binding_sites.to_csv(os.path.join(args.output_dir, "funfam", ff_id, "binding_sites.tsv"), sep='\t')
+        funfam.binding_sites.to_csv(os.path.join(args.output_dir, "funfams", ff_id, "binding_sites.tsv"), sep='\t')
         funfam.predictions_cluster_coeff.to_csv(os.path.join(args.output_dir, "funfams", ff_id, "predictions_cluster_coeff.tsv"),
                                                 sep='\t')
         funfam.predictions_cum_scores.to_csv(os.path.join(args.output_dir, "funfams", ff_id, "predictions_cum_scores.tsv"), sep='\t')
