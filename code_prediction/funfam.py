@@ -5,6 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, matthews_corrcoef, roc_auc_score
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -259,13 +260,34 @@ class FunFam:
 
     def compute_eval(self, predictions, annotation):
         trues = sum(predictions)
+        falses = sum((predictions == False))
         tp = sum(predictions & annotation)
         fp = trues - tp
         fn = sum((predictions == False) & annotation)
+        tn = falses - fn
 
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
+        acc = (tp + tn) / (tp + tn + fp + fn)
+        mcc = (tp * tn - fp * fn) / ((tp + fp) * (tp + fn) * (tn + fp)(tn + fn)) ** (1 / 2)
+
+        prec_skl = precision_score(annotation, predictions)
+        cov_skl = recall_score(annotation, predictions)
+        F1_skl = f1_score(annotation, predictions)
+        acc_skl = accuracy_score(annotation, predictions)
+        mcc_skl = matthews_corrcoef(annotation, predictions)
+
+        if prec_skl != prec:
+            print("Warning, different precision computed!:", prec_skl, prec)
+        if cov_skl != cov:
+            print("Warning, different coverage computed!:", cov_skl, cov)
+        if F1_skl != F1:
+            print("Warning, different F1 score computed!:", F1_skl, F1)
+        if acc_skl != acc:
+            print("Warning, different accuracy computed!:", acc_skl, acc)
+        if mcc_skl != mcc:
+            print("Warning, different mcc computed!:", mcc_skl, mcc)
 
         return ([prec, cov, F1])
 
