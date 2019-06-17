@@ -270,7 +270,9 @@ class FunFam:
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
-        mcc = (tp * tn - fp * fn) / ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn)) ** (0.5)
+
+        prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
 
         prec_skl = precision_score(annotation, predictions)
         cov_skl = recall_score(annotation, predictions)
@@ -278,8 +280,8 @@ class FunFam:
         acc_skl = accuracy_score(annotation, predictions)
         mcc_skl = matthews_corrcoef(annotation, predictions)
 
-        if prec_skl != prec:
-            print("Warning, different precision computed!:", prec_skl, prec)
+        #if prec_skl != prec:
+        #   print("Warning, different precision computed!:", prec_skl, prec)
         if cov_skl != cov:
             print("Warning, different coverage computed!:", cov_skl, cov)
         if F1_skl != F1:
