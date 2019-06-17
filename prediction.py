@@ -52,9 +52,14 @@ def main():
     # create FunFam and Protein objects for all data available
     for uniprot_id in valid_ids:
         uniprot_id_without_region = uniprot_id.split("_")[0]
-        alignment_stats_file = os.path.join(args.evc_info_dir, uniprot_id, uniprot_id + '_alignment_statistics.csv')
-        di_file = os.path.join(args.evc_info_dir, uniprot_id,  uniprot_id + ".di")
-        outcfg_file = os.path.join(args.evc_info_dir, uniprot_id,  uniprot_id + "_final.outcfg")
+        #in general:
+        # alignment_stats_file = os.path.join(args.evc_info_dir, uniprot_id, uniprot_id + '_alignment_statistics.csv')
+        #di_file = os.path.join(args.evc_info_dir, uniprot_id,  uniprot_id + ".di")
+        #outcfg_file = os.path.join(args.evc_info_dir, uniprot_id,  uniprot_id + "_final.outcfg")
+        #our local structure:
+        alignment_stats_file = os.path.join(args.evc_info_dir, 'output', uniprot_id, 'align', uniprot_id + '_alignment_statistics.csv')
+        di_file = os.path.join(args.evc_info_dir, 'freecontact', uniprot_id + ".di")
+        outcfg_file = os.path.join(args.evc_info_dir, 'output', uniprot_id + "_final.outcfg")
 
         # skip protein if alignment quality is insufficient
         COVERAGE_CUTOFF = 0.7
