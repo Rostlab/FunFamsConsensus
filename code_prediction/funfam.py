@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, matthews_corrcoef
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -281,8 +281,9 @@ class FunFam:
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
 
-        prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+        #prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
+        #mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+        mcc = matthews_corrcoef(annotation, predictions)
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
