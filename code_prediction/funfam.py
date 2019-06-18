@@ -302,9 +302,9 @@ class FunFam:
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
 
-        #prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        #mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
-        mcc = matthews_corrcoef(annotation, predictions)
+        prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+        #mcc = matthews_corrcoef(annotation, predictions)
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
