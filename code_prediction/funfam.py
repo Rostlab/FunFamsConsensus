@@ -276,6 +276,8 @@ class FunFam:
     def compute_mean_auroc(self):
         values = pd.DataFrame(columns=['cum','clust'])
         for i,member in enumerate(self.members):
+            if not member.binding_annotation:
+                continue
             annotation = self.map_score_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
             cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
             clust_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id])
