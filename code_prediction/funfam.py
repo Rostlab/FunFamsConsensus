@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, matthews_corrcoef, roc_auc_score
+from sklearn.metrics import roc_auc_score
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -259,7 +259,7 @@ class FunFam:
         return (sum(fraction_correct_per_member) / len(fraction_correct_per_member))
 
     def compute_auroc(self):
-        values = pd.DataFrame(columns=['cum','clust','cum_cons','clust_cons'])
+        values = pd.DataFrame(columns=['cum','cum_cons','clust','clust_cons'])
         for i,member in enumerate(self.members):
             pass
             #todo
@@ -282,26 +282,9 @@ class FunFam:
         acc = (tp + tn) / (tp + tn + fp + fn)
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 1
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
-
-        prec = precision_score(annotation, predictions)
-        cov = recall_score(annotation, predictions)
-        F1 = f1_score(annotation, predictions)
-        acc = accuracy_score(annotation, predictions)
-        mcc = matthews_corrcoef(annotation, predictions)
-
-        #if prec_skl != prec:
-        #   print("Warning, different precision computed!:", prec_skl, prec)
-        # if cov_skl != cov:
-        #     print("Warning, different coverage computed!:", cov_skl, cov)
-        # if F1_skl != F1:
-        #     print("Warning, different F1 score computed!:", F1_skl, F1)
-        # if acc_skl != acc:
-        #     print("Warning, different accuracy computed!:", acc_skl, acc)
-        # if mcc_skl != mcc:
-        #     print("Warning, different mcc computed!:", mcc_skl, mcc)
 
         return ([prec, cov, F1, acc, mcc])
 

@@ -254,6 +254,8 @@ def main():
 
     print('mean of: precision, coverage, F1 score, accuracy, mcc for cum and clust')
     print('\t'.join(map(str, evaluation_means.mean())))
+    print('without consensus:')
+    print('\t'.join(map(str, evaluation_means_no_cons.mean())))
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
           standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))
