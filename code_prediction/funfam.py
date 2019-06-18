@@ -286,11 +286,11 @@ class FunFam:
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
-        # prec_skl = precision_score(annotation, predictions)
-        # cov_skl = recall_score(annotation, predictions)
-        # F1_skl = f1_score(annotation, predictions)
-        # acc_skl = accuracy_score(annotation, predictions)
-        # mcc_skl = matthews_corrcoef(annotation, predictions)
+        prec = precision_score(annotation, predictions)
+        cov = recall_score(annotation, predictions)
+        F1 = f1_score(annotation, predictions)
+        acc = accuracy_score(annotation, predictions)
+        mcc = matthews_corrcoef(annotation, predictions)
 
         #if prec_skl != prec:
         #   print("Warning, different precision computed!:", prec_skl, prec)
