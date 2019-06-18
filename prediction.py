@@ -180,7 +180,8 @@ def main():
         funfam.predictions_cum_scores()
         funfam.evaluation()
 
-        mean_auroc_values.loc[i] = funfam.compute_mean_auroc()
+        aurocs = funfam.compute_mean_auroc()
+        mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
 
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)
