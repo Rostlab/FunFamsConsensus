@@ -278,9 +278,12 @@ class FunFam:
         for i,member in enumerate(self.members):
             if not member.binding_annotation:
                 continue
-            annotation = self.map_score_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
+            annotation = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
             cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
             clust_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id])
+            if sum(annotation) = 0:
+                print("no binding sites left")
+                continue
             cum_auroc = roc_auc_score(annotation, cum_scores)
             clust_auroc = roc_auc_score(annotation, clust_scores)
             values[i] = [cum_auroc, clust_auroc]
