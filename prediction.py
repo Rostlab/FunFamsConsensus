@@ -169,7 +169,8 @@ def main():
     evaluation_consensus_annotation = pd.DataFrame(index=index,
                                                    columns=["FunFam", "members", "prec_cons_annot", "cov_cons_annot",
                                                             "F1_cons_annot", "acc_cons_annot", "mcc_cons_annot"])
-    auroc_values = []
+
+    mean_auroc_values = pd.DataFrame(index=index, columns=["auroc_cum", "auroc_clust"])
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -178,8 +179,8 @@ def main():
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
         funfam.evaluation()
-        #todo
-        #auroc_values.append(funfam.compute_auroc())
+
+        mean_auroc_values.loc[i] = funfam.compute_mean_auroc()
 
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)
@@ -256,6 +257,8 @@ def main():
     print('\t'.join(map(str, evaluation_means.mean())))
     print('without consensus:')
     print('\t'.join(map(str, evaluation_means_no_cons.mean())))
+    print("auroc:")
+    print('\t'.join(map(str, mean_auroc_values.mean())))
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
           standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))

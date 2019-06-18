@@ -258,15 +258,31 @@ class FunFam:
                     self.members_with_no_correct_prediction_clust.append(0)
         return (sum(fraction_correct_per_member) / len(fraction_correct_per_member))
 
-    def compute_auroc(self):
-        values = pd.DataFrame(columns=['cum','cum_cons','clust','clust_cons'])
+    def map_score_to_sequence(self, aligned_sequence, scores):
+        """returns the scores (float) mapped to the non-aligned sequence"""
+        if len(aligned_sequence) != len(scores):
+            raise IndexError("length of aligned sequence and scores differ!")
+        else:
+            length = len([x for x in aligned_sequence if x != '-'])
+            output = np.zeros(length, dtype=float)
+            j = 0
+            for i, aa in enumerate(aligned_sequence):
+                if aa != '-':
+                    output[j] = scores[i + 1]
+                    j += 1
+
+            return (output)
+
+    def compute_mean_auroc(self):
+        values = pd.DataFrame(columns=['cum','clust'])
         for i,member in enumerate(self.members):
-            pass
-            #todo
-            #scores_cum = map_to_sequence(self.predictions_cum_scores[member.id])
-            #roc_auc_score(annotation, scores_x)
-            #values[i]
-        return values
+            annotation = self.map_score_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
+            cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
+            clust_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id])
+            cum_auroc = roc_auc_score(annotation, cum_scores)
+            clust_auroc = roc_auc_score(annotation, clust_scores)
+            values[i] = [cum_auroc, clust_auroc]
+        return values.mean()
 
     def compute_eval(self, predictions, annotation):
         trues = sum(predictions)
