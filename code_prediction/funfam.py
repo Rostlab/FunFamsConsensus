@@ -274,7 +274,7 @@ class FunFam:
             return (output)
 
     def compute_mean_auroc(self):
-        values = pd.DataFrame(columns=['cum','clust'])
+        values = []
         for i,member in enumerate(self.members):
             if not member.binding_annotation:
                 continue
@@ -291,9 +291,11 @@ class FunFam:
             cum_auroc = roc_auc_score(annotation, cum_scores)
             clust_auroc = roc_auc_score(annotation, clust_scores)
             #print('\n', cum_auroc, clust_auroc, '\n')
-            values[i] = [cum_auroc, clust_auroc]
-        print(values.mean())
-        return values.mean()
+            values.append([cum_auroc, clust_auroc])
+        out = pd.DataFrame(columns=['cum', 'clust'], index=self.binding_sites.columns[1:], data=values)
+        print(out.head())
+        print(out.mean())
+        return out.mean()
 
     def compute_eval(self, predictions, annotation):
         trues = sum(predictions)
