@@ -281,17 +281,18 @@ class FunFam:
             annotation = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]).astype(int)
             cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
             clust_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id])
-            print(annotation,'\n')
-            print(cum_scores, '\n')
-            print(clust_scores, '\n')
+            #print(annotation,'\n')
+            #print(cum_scores, '\n')
+            #print(clust_scores, '\n')
 
             if sum(annotation) == 0:
                 print("no binding sites left")
                 continue
             cum_auroc = roc_auc_score(annotation, cum_scores)
             clust_auroc = roc_auc_score(annotation, clust_scores)
-            print('\n', cum_auroc, clust_auroc, '\n')
+            #print('\n', cum_auroc, clust_auroc, '\n')
             values[i] = [cum_auroc, clust_auroc]
+        print(values.mean())
         return values.mean()
 
     def compute_eval(self, predictions, annotation):
