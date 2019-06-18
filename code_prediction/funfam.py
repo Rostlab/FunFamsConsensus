@@ -292,7 +292,7 @@ class FunFam:
             clust_auroc = roc_auc_score(annotation, clust_scores)
             #print('\n', cum_auroc, clust_auroc, '\n')
             values.append([cum_auroc, clust_auroc])
-        out = pd.DataFrame(columns=['cum', 'clust'], index=self.binding_sites.columns[1:], data=values)
+        out = pd.DataFrame(columns=['cum', 'clust'], index=range(0,len(values)), data=values)
         print(out.head())
         print(out.mean())
         return out.mean()
