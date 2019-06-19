@@ -305,15 +305,8 @@ class FunFam:
         fn = sum((predictions == False) & annotation)
         tn = falses - fn
 
-        tn_skl, fp_skl, fn_skl, tp_skl = confusion_matrix(annotation, predictions).ravel()
-        if tn != tn_skl:
-            print(tn, tn_skl)
-        if fp != fp_skl:
-            print(fp, tn_skl)
-        if fn != fn_skl:
-            print(fn, tn_skl)
-        if tp != tp_skl:
-            print(tp, tn_skl)
+        print(confusion_matrix(annotation, predictions))
+        print(tn,fp,fn,tp)
 
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
