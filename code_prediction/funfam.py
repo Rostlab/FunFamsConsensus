@@ -215,10 +215,10 @@ class FunFam:
 
         if sum(consensus) == 0:
             if method == "cum":
-                print(self.name, "no prediction cum")
+                print(self.name, "no consensus prediction cum")
                 self.consensus_has_prediction_cum = False
             elif method == "clust":
-                print(self.name, "no prediction cum")
+                print(self.name, "no consensus prediction cum")
                 self.consensus_has_prediction_clust = False
             return ()
         else:
@@ -312,10 +312,10 @@ class FunFam:
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
         if prod == 0:
-            print(self.name,'tp:',tp,'fp:',fp,'fn:',fn,'tn:',tn)
-        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+            mcc = np.NaN    #no annotated and/or no predicted binding sites
+        else:
+            mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
         #mcc = matthews_corrcoef(annotation, predictions)
-        #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
         return ([prec, cov, F1, acc, mcc])
