@@ -314,7 +314,7 @@ class FunFam:
         #mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
         an = [-1 if x == 0 else x for x in annotation]
         pred = [-1 if x == 0 else x for x in predictions]
-        mcc = matthews_corrcoef(annotation, predictions)
+        mcc = matthews_corrcoef(an, pred)
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
