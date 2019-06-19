@@ -293,8 +293,8 @@ class FunFam:
             #print('\n', cum_auroc, clust_auroc, '\n')
             values.append([cum_auroc, clust_auroc])
         out = pd.DataFrame(columns=['cum', 'clust'], index=range(0,len(values)), data=values)
-        print(out.head())
-        print(out.mean())
+        #print(out.head())
+        #print(out.mean())
         return out.mean()
 
     def compute_eval(self, predictions, annotation):
