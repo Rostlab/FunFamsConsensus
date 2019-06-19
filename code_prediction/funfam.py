@@ -310,6 +310,9 @@ class FunFam:
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
 
+        print('pred',set(predictions))
+        print('annot', set(annotation))
+
         #prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
         #mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
         an = [-1 if x == 0 else x for x in annotation]
