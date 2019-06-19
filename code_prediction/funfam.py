@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix
+from sklearn.metrics import roc_auc_score
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -304,9 +304,6 @@ class FunFam:
         fp = trues - tp
         fn = sum((predictions == False) & annotation)
         tn = falses - fn
-
-        print(confusion_matrix(annotation, predictions))
-        print(tn,fp,fn,tp)
 
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
