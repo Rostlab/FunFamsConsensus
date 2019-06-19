@@ -310,11 +310,11 @@ class FunFam:
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
         acc = (tp + tn) / (tp + tn + fp + fn)
 
-        #prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        #mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
-        an = [-1 if not x else +1 for x in annotation]
-        pred = [-1 if not x else +1 for x in predictions]
-        mcc = matthews_corrcoef(an, pred)
+        prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
+        if prod == 0:
+            print(self.name,'tp:',tp,'fp:',fp,'fn:',fn,'tn:',tn)
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+        #mcc = matthews_corrcoef(annotation, predictions)
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
 
