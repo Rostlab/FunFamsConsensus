@@ -314,8 +314,8 @@ class FunFam:
         if prod == 0:
             mcc = np.NaN    #no annotated and/or no predicted binding sites
         else:
-            mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
-        #mcc = matthews_corrcoef(annotation, predictions)
+            #mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
+            mcc = matthews_corrcoef(annotation, predictions)
         #auroc = roc_auc_score(annotation, predictions)
 
         return ([prec, cov, F1, acc, mcc])
