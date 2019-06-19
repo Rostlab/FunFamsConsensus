@@ -311,7 +311,7 @@ class FunFam:
         acc = (tp + tn) / (tp + tn + fp + fn)
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
-        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 0
+        mcc = (tp * tn - fp * fn) / prod**(0.5) if prod != 0 else 1
         #mcc = matthews_corrcoef(annotation, predictions)
         #mcc = abs(mcc)
         #auroc = roc_auc_score(annotation, predictions)
