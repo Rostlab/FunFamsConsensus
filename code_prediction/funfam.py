@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import roc_auc_score, matthews_corrcoef
+from sklearn.metrics import roc_auc_score, matthews_corrcoef, confusion_matrix
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -305,6 +305,16 @@ class FunFam:
         fn = sum((predictions == False) & annotation)
         tn = falses - fn
 
+        tn_skl, fp_skl, fn_skl, tp_skl = confusion_matrix(annotation, predictions)
+        if tn != tn_skl:
+            print(tn, tn_skl)
+        if fp != fp_skl:
+            print(fp, tn_skl)
+        if fn != fn_skl:
+            print(fn, tn_skl)
+        if tp != tp_skl:
+            print(tp, tn_skl)
+
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
         F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
@@ -314,8 +324,8 @@ class FunFam:
         if prod == 0:
             mcc = np.NaN    #no annotated and/or no predicted binding sites
         else:
-            #mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
-            mcc = matthews_corrcoef(annotation, predictions)
+            mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
+            #mcc = matthews_corrcoef(annotation, predictions)
         #auroc = roc_auc_score(annotation, predictions)
 
         return ([prec, cov, F1, acc, mcc])
