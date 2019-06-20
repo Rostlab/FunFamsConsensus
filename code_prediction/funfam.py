@@ -5,7 +5,7 @@ from Bio.Seq import Seq
 from Bio import SeqIO, AlignIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, roc_curve
 
 
 # clustalw_exe = r"C:\Program Files (x86)\ClustalW2\clustalw2.exe"
@@ -272,6 +272,47 @@ class FunFam:
                     j += 1
 
             return (output)
+
+    def get_consensus_tpr_fpr(self, uniprot_id):
+        for i, member in enumerate(self.members):
+            if not member.binding_annotation:
+                continue
+            if member.id == uniprot_id:
+                annotation = self.map_from_alignment_to_sequence(member.aligned_sequence,
+                                                                 self.binding_sites[member.id]).astype(int)
+                cum_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
+                clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
+
+                data = []
+                for prediction in [cum_predictions, clust_predictions]:
+
+                    trues = sum(prediction)
+                    falses = sum((prediction == False))
+                    tp = sum(prediction & annotation)
+                    fp = trues - tp
+                    fn = sum((prediction == False) & annotation)
+                    tn = falses - fn
+                    tpr = tp / (tp + fn) if (tp + fn) != 0 else 1 #tpr == cov
+                    fpr = fp / (fp + tn)
+
+                    data.extend(fpr, tpr)
+
+                return data
+
+    def get_tpr_fpr(self, uniprot_id):
+        for i,member in enumerate(self.members):
+            if not member.binding_annotation:
+                continue
+            if member.id == uniprot_id:
+                annotation = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]).astype(int)
+                cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
+                clust_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id])
+
+                fpr_cum, tpr_cum, thresholds_clust = roc_curve(annotation, cum_scores)
+                fpr_clust, tpr_clust, thresholds_clust = roc_curve(annotation, clust_scores)
+
+                return pd.DataFrame(columns=['fpr_cum','tpr_cum','fpr_clust', 'tpr_clust'], index = [1], data=[fpr_cum, tpr_cum, fpr_clust, tpr_clust])
+
 
     def compute_mean_auroc(self):
         values = []

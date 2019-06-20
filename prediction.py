@@ -194,6 +194,16 @@ def main():
         aurocs = funfam.compute_mean_auroc()
         mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
 
+
+        if funfam.name == '1999':
+            roc_data = funfam.get_tpr_fpr('P9WHE9')
+            print("data for roc curve of specific protein:")
+            print(roc_data)
+            consensus_roc_data = funfam.get_consensus_tpr_fpr('P9WHE9')
+            print("at consensus cut-off:",+args.cons_cutoff)
+            print("data for consensus roc: fpr_cum tpr_cum fpr_clust tpr_clust")
+
+
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)
         funfam.evaluate_new_consensus()
