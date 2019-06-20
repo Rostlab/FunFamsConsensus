@@ -132,6 +132,7 @@ def main():
 
     i = 1
     j = 0
+    m = 1
     eval_per_seq_entries = 0
     index = list(range(1, len(funfams.keys()) + 1))
     columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
@@ -174,7 +175,7 @@ def main():
 
     evaluation_transferred_annotations = pd.DataFrame(index=index, columns=["prec","cov","F1","acc","mcc"])
 
-    confusion_matrices = pd.DataFrame(index=index, columns=["funfam", "uniprot", "fp_ccs", "tp_ccs", "fn_ccs", "tn_ccs", "fp_cc", "tp_cc", "fn_cc", "tn_cc", "fp_ccs_cons", "tp_ccs_cons", "fn_ccs_cons", "tn_ccs_cons", "fp_cc_cons", "tp_cc_cons", "fn_cc_cons", "tn_cc_cons"])
+    confusion_matrices = pd.DataFrame(columns=["funfam", "uniprot", "fp_ccs", "tp_ccs", "fn_ccs", "tn_ccs", "fp_cc", "tp_cc", "fn_cc", "tn_cc", "fp_ccs_cons", "tp_ccs_cons", "fn_ccs_cons", "tn_ccs_cons", "fp_cc_cons", "tp_cc_cons", "fn_cc_cons", "tn_cc_cons"])
 
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
@@ -184,7 +185,9 @@ def main():
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
         confusion = funfam.evaluation()
-        confusion_matrices.loc[i] = confusion
+        for p in confusion:
+            confusion_matrices.loc[m] = confusion
+            m+=1
         mean_performance_transferred_annotations = funfam.evaluate_transferred_annotations()
         evaluation_transferred_annotations.loc[i] = mean_performance_transferred_annotations
 

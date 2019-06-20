@@ -394,6 +394,8 @@ class FunFam:
         columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
         index = self.binding_sites.columns[1:]
 
+        confusion_matrices = []
+
         for member in self.members:
             if not member.binding_annotation:
                 continue
@@ -441,14 +443,17 @@ class FunFam:
             # print(self.name,member.id,member.evaluation_values)
             member.evaluation_consensus = (eval_cum_cons + eval_clust_cons)
 
+            confusion_matrices.append(confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons)
+
         data = [member.evaluation_values for member in self.members if member.binding_annotation]
         data_consensus = [member.evaluation_consensus for member in self.members if member.binding_annotation]
+
 
         self.evaluation = pd.DataFrame(index=index, columns=columns, data=data)
         self.evaluation_consensus = pd.DataFrame(index=index, columns=columns, data=data_consensus)
 
         #print(confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons)
-        return confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons
+        return confusion_matrices
 
 # def evaluation(self):
 # 	columns = ['prec_cum','cov_cum','F1_cum','prec_clust','cov_clust','F1_clust']
