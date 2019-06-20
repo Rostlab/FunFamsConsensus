@@ -319,8 +319,8 @@ class FunFam:
         #auroc = roc_auc_score(annotation, predictions)
 
         if p:
-            print(m, 'annotation:', annotation.astype(int))
-            print(m, 'predictions:', predictions.astype(int))
+            print(m, 'annotation:', len(annotation), annotation.astype(int))
+            print(m, 'predictions:', len(predictions), predictions.astype(int))
 
         return ([prec, cov, F1, acc, mcc])
 
@@ -372,26 +372,26 @@ class FunFam:
             if self.name == '23222' and member.id == 'P00947':
                 p = True
                 print(self.name, member.id)
-                print(member.aligned_sequence)
+                print([x for x in member.aligned_sequence if x != '-'])
             else:
                 p = False
 
             # mapping back to individual protein level:
             eval_cum = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base prediction')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base')
             eval_clust = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id]),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'clust base prediction')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'clust base')
 
             eval_cum_cons = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores['consensus']),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum consensus prediction')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum consensus')
             eval_clust_cons = self.compute_eval(self.map_from_alignment_to_sequence(member.aligned_sequence,
                                                                                     self.predictions_cluster_coeff[
                                                                                         'consensus']),
                                                 self.map_from_alignment_to_sequence(member.aligned_sequence,
-                                                                                    self.binding_sites[member.id]), p, 'clust consensus prediction')
+                                                                                    self.binding_sites[member.id]), p, 'clust consensus')
 
             # member.set_evaluation_values(eval_cum + eval_clust)
             # member.set_evaluation_consensus(eval_cum_cons + eval_clust_cons)
