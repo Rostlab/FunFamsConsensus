@@ -319,8 +319,8 @@ class FunFam:
         #auroc = roc_auc_score(annotation, predictions)
 
         if p:
-            print(m, 'annotation:', annotation)
-            print(m, 'predictions:', predictions)
+            print(m, 'annotation:', annotation.astype(int))
+            print(m, 'predictions:', predictions.astype(int))
 
         return ([prec, cov, F1, acc, mcc])
 
@@ -371,6 +371,8 @@ class FunFam:
 
             if self.name == '23222' and member.id == 'P00947':
                 p = True
+                print(self.name, member.id)
+                print(member.aligned_sequence)
             else:
                 p = False
 
