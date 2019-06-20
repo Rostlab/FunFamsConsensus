@@ -298,7 +298,8 @@ class FunFam:
                     tpr = tp / (tp + fn) if (tp + fn) != 0 else 1 #tpr == cov
                     fpr = fp / (fp + tn)
 
-                    data.extend(fpr + tpr)
+                    data.append(fpr)
+                    data.append(tpr)
 
                 return data
 
