@@ -350,6 +350,35 @@ class FunFam:
 
             return (output)
 
+    def evaluate_transferred_annotations(self):
+        """transfer annotations within a FunFam to test how well the annotation of one sequence works for the others in that FunFam"""
+
+        columns = ['prec', 'cov', 'F1', 'acc', 'mcc']
+        data = []
+
+        #take annotation of member1 and evaluate on annotation of member2
+        for member1 in self.members:
+            if not member1.binding_annotation:
+                continue
+
+            for member2 in self.members:
+                if not member2.binding_annotation:
+                    continue
+                if member1.id == member2.id:
+                    continue
+
+                eval = self.compute_eval(
+                    self.map_from_alignment_to_sequence(member2.aligned_sequence,
+                                                        self.binding_sites[member1.id]),
+                    self.map_from_alignment_to_sequence(member2.aligned_sequence, self.binding_sites[member2.id]))
+
+                data.append(eval)
+
+        df = pd.DataFrame(columns = columns, index = range(0,len(data)), data=data)
+        mean_performances = df.mean()
+        
+        return mean_performances
+
     def evaluation(self):
         #########
         # evaluation on basis of aligned sequence, instead map to sequence without gaps/discard predictions for gaps
