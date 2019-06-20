@@ -4,7 +4,7 @@ from Bio import SeqIO, AlignIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
-from sklearn.metrics import roc_auc_score, matthews_corrcoef
+from sklearn.metrics import precision_score, accuracy_score, recall_score, f1_score, roc_auc_score, matthews_corrcoef
 import pandas as pd
 #
 # path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\bindPredict_performance.txt'
@@ -16,10 +16,27 @@ import pandas as pd
 # data['mcc'] = mcc*100
 #
 # print(data.mean())
+def eval_cm(tp, fp, fn, tn, type):
+    prec = tp / (tp + fp) if (tp + fp) != 0 else 1
+    cov = tp / (tp + fn) if (tp + fn) != 0 else 1
+    F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
+    acc = (tp + tn) / (tp + tn + fp + fn)
+    prod = ((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    if prod == 0:
+        mcc = np.NaN  # no annotated and/or no predicted binding sites
+    else:
+        mcc = (tp * tn - fp * fn) / prod ** (0.5)
 
-path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices.csv'
-data = pd.read_csv(path, sep=' ', header=0, engine='python', index_)
-print(data.head())
+    if type == 'prec':
+        return prec
+    elif type == 'cov':
+        return cov
+    elif type == 'F1':
+        return F1
+    elif type == 'acc':
+        return acc
+    elif type == 'mcc':
+        return mcc
 
 
 def compute_eval(predictions, annotation):
@@ -43,6 +60,26 @@ def compute_eval(predictions, annotation):
         # mcc = matthews_corrcoef(annotation, predictions)
 
     return [prec, cov, F1, acc, mcc]
+
+path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices.csv'
+data = pd.read_csv(path, sep=',', header=0, engine='python')
+#print(data.head())
+
+for measure in ['prec','cov','F1','acc','mcc']:
+    data[measure+'_ccs'] = np.vectorize(eval_cm)(data['tp_ccs'], data['fp_ccs'], data['fn_ccs'], data['tn_ccs'], measure)
+for measure in ['prec', 'cov', 'F1', 'acc', 'mcc']:
+    data[measure + '_cc'] = np.vectorize(eval_cm)(data['tp_cc'], data['fp_cc'], data['fn_cc'], data['tn_cc'],
+                                                   measure)
+for measure in ['prec','cov','F1','acc','mcc']:
+    data[measure+'_ccs_cons'] = np.vectorize(eval_cm)(data['tp_ccs_cons'], data['fp_ccs_cons'], data['fn_ccs_cons'], data['tn_ccs_cons'], measure)
+for measure in ['prec', 'cov', 'F1', 'acc', 'mcc']:
+    data[measure + '_cc_cons'] = np.vectorize(eval_cm)(data['tp_cc_cons'], data['fp_cc_cons'], data['fn_cc_cons'], data['tn_cc_cons'],
+                                                   measure)
+
+data.groupby('uniprot').mean()
+print(data.head())
+print(data.mean())
+
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
     # seqs = [Seq(x) for x in sequences if type(x) != Seq]
