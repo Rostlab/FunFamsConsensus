@@ -421,7 +421,7 @@ class FunFam:
             # mapping back to individual protein level:
             eval_cum = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base', confusion_matrix=confusion_matrix_cum, member_id = member.name)
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base', confusion_matrix=confusion_matrix_cum, member_id = member.id)
             eval_clust = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id]),
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'clust base', confusion_matrix=confusion_matrix_clust)
