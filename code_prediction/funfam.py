@@ -306,11 +306,10 @@ class FunFam:
         tn = falses - fn
 
         if confusion_matrix is not None:
-            print(member_id)
             if member_id is not None:
-                confusion_matrix.append([self.name, member_id, fp, tp, fn, tn])
+                confusion_matrix.extend([self.name, member_id, fp, tp, fn, tn])
             else:
-                confusion_matrix.append([fp, tp, fn, tn])
+                confusion_matrix.extend([fp, tp, fn, tn])
 
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
@@ -395,14 +394,14 @@ class FunFam:
         columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
         index = self.binding_sites.columns[1:]
 
-        confusion_matrix_cum = []
-        confusion_matrix_clust = []
-        confusion_matrix_cum_cons = []
-        confusion_matrix_clust_cons = []
-
         for member in self.members:
             if not member.binding_annotation:
                 continue
+
+            confusion_matrix_cum = []
+            confusion_matrix_clust = []
+            confusion_matrix_cum_cons = []
+            confusion_matrix_clust_cons = []
 
             # without mapping back to individual protein level:
             # eval_cum = self.compute_eval(self.predictions_cum_scores[member.id],self.binding_sites[member.id])
