@@ -447,7 +447,7 @@ class FunFam:
         self.evaluation = pd.DataFrame(index=index, columns=columns, data=data)
         self.evaluation_consensus = pd.DataFrame(index=index, columns=columns, data=data_consensus)
 
-        print(confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons)
+        #print(confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons)
         return confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons
 
 # def evaluation(self):
