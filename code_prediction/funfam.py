@@ -311,7 +311,7 @@ class FunFam:
                 fpr_cum, tpr_cum, thresholds_clust = roc_curve(annotation, cum_scores)
                 fpr_clust, tpr_clust, thresholds_clust = roc_curve(annotation, clust_scores)
 
-                return pd.DataFrame(columns=['fpr_cum','tpr_cum','fpr_clust', 'tpr_clust'], index = [1], data=[fpr_cum, tpr_cum, fpr_clust, tpr_clust])
+                return [fpr_cum, tpr_cum, fpr_clust, tpr_clust]
 
 
     def compute_mean_auroc(self):
