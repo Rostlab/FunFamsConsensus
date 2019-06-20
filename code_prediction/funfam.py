@@ -306,6 +306,7 @@ class FunFam:
         tn = falses - fn
 
         if confusion_matrix is not None:
+            print(member_id)
             if member_id is not None:
                 confusion_matrix.append([self.name, member_id, fp, tp, fn, tn])
             else:
