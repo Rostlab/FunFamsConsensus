@@ -184,7 +184,7 @@ def main():
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
         confusion = funfam.evaluation()
-
+        confusion_matrices.loc[i] = confusion
         mean_performance_transferred_annotations = funfam.evaluate_transferred_annotations()
         evaluation_transferred_annotations.loc[i] = mean_performance_transferred_annotations
 
@@ -220,7 +220,6 @@ def main():
 
         # for consensus:
         if funfam.num_binding_members > 1:  # previously included all sequences
-            confusion_matrices.loc[i] = confusion
             evaluation_means.loc[i] = funfam.evaluation_consensus.mean()
             evaluation_means_no_cons.loc[i] = funfam.evaluation.mean()
             evaluation_means_consensus_annotation.loc[i] = funfam.annotation_eval
