@@ -171,6 +171,9 @@ def main():
                                                             "F1_cons_annot", "acc_cons_annot", "mcc_cons_annot"])
 
     mean_auroc_values = pd.DataFrame(index=index, columns=["auroc_cum", "auroc_clust"])
+
+    evaluation_transferred_annotations = pd.DataFrame(index=index, columns=["prec","cov","F1","acc","mcc"])
+
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -179,6 +182,9 @@ def main():
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
         funfam.evaluation()
+
+        mean_performance_transferred_annotations = funfam.evaluate_transferred_annotations()
+        evaluation_transferred_annotations.loc[i] = mean_performance_transferred_annotations
 
         aurocs = funfam.compute_mean_auroc()
         mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
@@ -260,6 +266,8 @@ def main():
     print('\t'.join(map(str, evaluation_means_no_cons.mean())))
     print("auroc:")
     print('\t'.join(map(str, mean_auroc_values.mean())))
+    print("mean performance transferred annotations:")
+    print(evaluation_transferred_annotations.mean())
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
           standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))

@@ -376,7 +376,7 @@ class FunFam:
 
         df = pd.DataFrame(columns = columns, index = range(0,len(data)), data=data)
         mean_performances = df.mean()
-        
+
         return mean_performances
 
     def evaluation(self):
