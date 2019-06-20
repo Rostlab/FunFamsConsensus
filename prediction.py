@@ -186,7 +186,7 @@ def main():
         funfam.predictions_cum_scores()
         confusion = funfam.evaluation()
         for p in confusion:
-            confusion_matrices.loc[m] = confusion
+            confusion_matrices.loc[m] = p
             m+=1
         mean_performance_transferred_annotations = funfam.evaluate_transferred_annotations()
         evaluation_transferred_annotations.loc[i] = mean_performance_transferred_annotations
