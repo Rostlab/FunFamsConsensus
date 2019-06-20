@@ -282,10 +282,11 @@ class FunFam:
                                                                  self.binding_sites[member.id]).astype(int)
                 cum_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
                 clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
-
+                print(cum_predictions)
+                print(clust_predictions)
                 data = []
                 for prediction in [cum_predictions, clust_predictions]:
-
+                    print(prediction)
                     trues = sum(prediction)
                     falses = sum((prediction == False))
                     tp = sum(prediction & annotation)

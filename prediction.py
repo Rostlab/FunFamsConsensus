@@ -197,7 +197,7 @@ def main():
 
         if funfam.name == '1999':
             roc_data = funfam.get_tpr_fpr('P9WHE9')
-            print("data for roc curve of specific protein:")
+            print("data for roc curve of specific protein: fpr_cum tpr_cum fpr_clust tpr_clust")
             print(roc_data)
             consensus_roc_data = funfam.get_consensus_tpr_fpr('P9WHE9')
             print("at consensus cut-off:",+args.cons_cutoff)
