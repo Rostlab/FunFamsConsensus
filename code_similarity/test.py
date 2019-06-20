@@ -76,7 +76,12 @@ for measure in ['prec', 'cov', 'F1', 'acc', 'mcc']:
     data[measure + '_cc_cons'] = np.vectorize(eval_cm)(data['tp_cc_cons'], data['fp_cc_cons'], data['fn_cc_cons'], data['tn_cc_cons'],
                                                    measure)
 
+#print(data.shape)
+#counts = data['funfam'].value_counts()
+#to_drop = data[data['funfam'].value_counts() == 1]
+##data = data.drop(to_drop)
 data.groupby('uniprot').mean()
+print(data.shape)
 print(data.head())
 print(data.mean())
 
