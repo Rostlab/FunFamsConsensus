@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from Bio import SeqIO, AlignIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -16,9 +17,32 @@ import pandas as pd
 #
 # print(data.mean())
 
-path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices.tsv'
-data = pd.read_csv(path, sep=' ', header=0, engine='python')
+path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices.csv'
+data = pd.read_csv(path, sep=' ', header=0, engine='python', index_)
 print(data.head())
+
+
+def compute_eval(predictions, annotation):
+    trues = sum(predictions)
+    falses = sum((predictions == False))
+    tp = sum(predictions & annotation)
+    fp = trues - tp
+    fn = sum((predictions == False) & annotation)
+    tn = falses - fn
+
+    prec = tp / trues if trues != 0 else 1
+    cov = tp / (tp + fn) if (tp + fn) != 0 else 1
+    F1 = 2 * (cov * prec) / (cov + prec) if (cov + prec) != 0 else 0
+    acc = (tp + tn) / (tp + tn + fp + fn)
+
+    prod = ((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn))
+    if prod == 0:
+        mcc = np.NaN  # no annotated and/or no predicted binding sites
+    else:
+        mcc = (tp * tn - fp * fn) / prod ** (0.5)  # if prod != 0 else 0
+        # mcc = matthews_corrcoef(annotation, predictions)
+
+    return [prec, cov, F1, acc, mcc]
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
     # seqs = [Seq(x) for x in sequences if type(x) != Seq]

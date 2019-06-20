@@ -311,7 +311,7 @@ def main():
           sum(no_correct_prediction_clust) / len(no_correct_prediction_clust))
 
 
-    confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'))
+    confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'), index=False)
     evaluation_full.to_csv(os.path.join(args.output_dir, 'evaluation_full_new.tsv'),
                            sep="\t", index=False)
     evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
