@@ -202,7 +202,7 @@ def main():
             consensus_roc_data = funfam.get_consensus_tpr_fpr('P9WHE9')
             print("at consensus cut-off:",+args.cons_cutoff)
             print("data for consensus roc: fpr_cum tpr_cum fpr_clust tpr_clust")
-
+            print(consensus_roc_data)
 
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)
