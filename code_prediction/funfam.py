@@ -297,13 +297,19 @@ class FunFam:
         #print(out.mean())
         return out.mean()
 
-    def compute_eval(self, predictions, annotation, p=False, m=None):
+    def compute_eval(self, predictions, annotation, p=False, m=None, confusion_matrix=None, member_id=None):
         trues = sum(predictions)
         falses = sum((predictions == False))
         tp = sum(predictions & annotation)
         fp = trues - tp
         fn = sum((predictions == False) & annotation)
         tn = falses - fn
+
+        if confusion_matrix is not None:
+            if member_id is not None:
+                confusion_matrix.append([self.name, member_id, fp, tp, fn, tn])
+            else:
+                confusion_matrix.append([fp, tp, fn, tn])
 
         prec = tp / trues if trues != 0 else 1
         cov = tp / (tp + fn) if (tp + fn) != 0 else 1
@@ -367,6 +373,7 @@ class FunFam:
                 if member1.id == member2.id:
                     continue
 
+                #take annotation of member1 mapped to sequence of member2 as "predictions" and annotation of member2 as actual annotation
                 eval = self.compute_eval(
                     self.map_from_alignment_to_sequence(member2.aligned_sequence,
                                                         self.binding_sites[member1.id]),
@@ -386,6 +393,11 @@ class FunFam:
         #########
         columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
         index = self.binding_sites.columns[1:]
+
+        confusion_matrix_cum = []
+        confusion_matrix_clust = []
+        confusion_matrix_cum_cons = []
+        confusion_matrix_clust_cons = []
 
         for member in self.members:
             if not member.binding_annotation:
@@ -409,19 +421,19 @@ class FunFam:
             # mapping back to individual protein level:
             eval_cum = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum base', confusion_matrix=confusion_matrix_cum, member_id = member.name)
             eval_clust = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cluster_coeff[member.id]),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'clust base')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'clust base', confusion_matrix=confusion_matrix_clust)
 
             eval_cum_cons = self.compute_eval(
                 self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores['consensus']),
-                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum consensus')
+                self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id]), p, 'cum consensus',  confusion_matrix=confusion_matrix_cum_cons)
             eval_clust_cons = self.compute_eval(self.map_from_alignment_to_sequence(member.aligned_sequence,
                                                                                     self.predictions_cluster_coeff[
                                                                                         'consensus']),
                                                 self.map_from_alignment_to_sequence(member.aligned_sequence,
-                                                                                    self.binding_sites[member.id]), p, 'clust consensus')
+                                                                                    self.binding_sites[member.id]), p, 'clust consensus',  confusion_matrix=confusion_matrix_clust_cons)
 
             # member.set_evaluation_values(eval_cum + eval_clust)
             # member.set_evaluation_consensus(eval_cum_cons + eval_clust_cons)
@@ -434,6 +446,8 @@ class FunFam:
 
         self.evaluation = pd.DataFrame(index=index, columns=columns, data=data)
         self.evaluation_consensus = pd.DataFrame(index=index, columns=columns, data=data_consensus)
+
+        return confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons
 
 # def evaluation(self):
 # 	columns = ['prec_cum','cov_cum','F1_cum','prec_clust','cov_clust','F1_clust']

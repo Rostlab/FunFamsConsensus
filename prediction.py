@@ -174,6 +174,8 @@ def main():
 
     evaluation_transferred_annotations = pd.DataFrame(index=index, columns=["prec","cov","F1","acc","mcc"])
 
+    confusion_matrices = pd.DataFrame(index=index, columns=["funfam", "uniprot", "fp_ccs", "tp_ccs", "fn_ccs", "tn_ccs", "fp_cc", "tp_cc", "fn_cc", "tn_cc", "fp_ccs_cons", "tp_ccs_cons", "fn_ccs_cons", "tn_ccs_cons", "fp_cc_cons", "tp_cc_cons", "fn_cc_cons", "tn_cc_cons"])
+
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -181,7 +183,8 @@ def main():
         funfam.binding_sites()
         funfam.predictions_cluster_coeff()
         funfam.predictions_cum_scores()
-        funfam.evaluation()
+        confusion = funfam.evaluation()
+        confusion_matrices.loc[i] = confusion
 
         mean_performance_transferred_annotations = funfam.evaluate_transferred_annotations()
         evaluation_transferred_annotations.loc[i] = mean_performance_transferred_annotations
@@ -307,6 +310,8 @@ def main():
           sum(no_correct_prediction_cum) / len(no_correct_prediction_cum), "clust:",
           sum(no_correct_prediction_clust) / len(no_correct_prediction_clust))
 
+
+    confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'))
     evaluation_full.to_csv(os.path.join(args.output_dir, 'evaluation_full_new.tsv'),
                            sep="\t", index=False)
     evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
