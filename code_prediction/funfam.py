@@ -280,15 +280,15 @@ class FunFam:
             if member.id == uniprot_id:
                 annotation = self.map_from_alignment_to_sequence(member.aligned_sequence,
                                                                  self.binding_sites[member.id]).astype(int)
-                cum_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id]),
-                clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites[member.id])
-                print(cum_predictions)
-                print(clust_predictions)
+                cum_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.predictions_cum_scores['consensus']),
+                clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence, self.binding_sites['consensus'])
+                #print(cum_predictions)
+                #print(clust_predictions)
                 data = []
                 for prediction in [cum_predictions, clust_predictions]:
                     if type(prediction) == tuple:
                         prediction = prediction[0]
-                    print(prediction)
+                    #print(prediction)
                     trues = sum(prediction)
                     falses = sum((prediction == False))
                     tp = sum(prediction & annotation)
