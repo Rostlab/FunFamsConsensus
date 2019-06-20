@@ -372,7 +372,8 @@ class FunFam:
             if self.name == '23222' and member.id == 'P00947':
                 p = True
                 print(self.name, member.id)
-                print([x for x in member.aligned_sequence if x != '-'])
+                s = ''.join([x for x in member.aligned_sequence if x != '-'])
+                print(len(s), s)
             else:
                 p = False
 
