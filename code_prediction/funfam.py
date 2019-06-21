@@ -363,7 +363,7 @@ class FunFam:
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
         if prod == 0:
-            mcc = 1#np.NaN    #no annotated and/or no predicted binding sites
+            mcc = np.NaN    #no annotated and/or no predicted binding sites
         else:
             mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
             #mcc = matthews_corrcoef(annotation, predictions)
