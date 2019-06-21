@@ -363,7 +363,7 @@ class FunFam:
 
         prod = ((tp + fp)*(tp + fn)*(tn + fp)*(tn + fn))
         if prod == 0:
-            mcc = np.NaN    #no annotated and/or no predicted binding sites
+            mcc = 1#np.NaN    #no annotated and/or no predicted binding sites
         else:
             mcc = (tp * tn - fp * fn) / prod**(0.5) #if prod != 0 else 0
             #mcc = matthews_corrcoef(annotation, predictions)
@@ -457,7 +457,7 @@ class FunFam:
             # eval_cum_cons = self.compute_eval(self.predictions_cum_scores['consensus'],self.binding_sites[member.id])
             # eval_clust_cons = self.compute_eval(self.predictions_cluster_coeff['consensus'],self.binding_sites[member.id])
 
-            if self.name == '1999' and member.id == 'P9WHE9':
+            if self.name == '1999' and member.id == 'P9WHE9c':
                 p = True
                 print(self.name, member.id)
                 s = ''.join([x for x in member.aligned_sequence if x != '-'])

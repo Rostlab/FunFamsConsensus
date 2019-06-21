@@ -61,9 +61,9 @@ def compute_eval(predictions, annotation):
 
     return [prec, cov, F1, acc, mcc]
 
-path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices.csv'
+path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\confusion_matrices_001.csv'
 data = pd.read_csv(path, sep=',', header=0, engine='python')
-#print(data.head())
+print(data.shape)
 
 for measure in ['prec','cov','F1','acc','mcc']:
     data[measure+'_ccs'] = np.vectorize(eval_cm)(data['tp_ccs'], data['fp_ccs'], data['fn_ccs'], data['tn_ccs'], measure)
@@ -80,9 +80,13 @@ for measure in ['prec', 'cov', 'F1', 'acc', 'mcc']:
 #counts = data['funfam'].value_counts()
 #to_drop = data[data['funfam'].value_counts() == 1]
 ##data = data.drop(to_drop)
-data.groupby('uniprot').mean()
+#group_size = data.groupby('funfam').size()
+#print('groups < 2',group_size[group_size == 2])
+#print(len(data['funfam']), len(set(data['funfam'])))
+#data = data.groupby(['funfam']).filter(lambda x: group_size[x.funfam] >= 1)
+data = data.groupby('funfam').mean()
 print(data.shape)
-print(data.head())
+#print(data.head())
 print(data.mean())
 
 

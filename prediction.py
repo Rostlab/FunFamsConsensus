@@ -279,8 +279,10 @@ def main():
         i += 1
 
     print('mean of: precision, coverage, F1 score, accuracy, mcc for cum and clust')
+    print('shape of evaluation df:', evaluation_means.shape)
     print('\t'.join(map(str, evaluation_means.mean())))
     print('without consensus:')
+    print('shape of evaluation df:', evaluation_means_no_cons.shape)
     print('\t'.join(map(str, evaluation_means_no_cons.mean())))
     print("auroc:")
     print('\t'.join(map(str, mean_auroc_values.mean())))
