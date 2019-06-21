@@ -7,6 +7,8 @@ launch the similarity computation of binding residues
 #"C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\funfam_project\data\ff2.p"
 #-limit
 #"funfam"
+#-pickle
+#"C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\FunFams\data\ff3.p"
 
 import os
 import argparse
@@ -91,9 +93,9 @@ def main():
         funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
         print("done reading.")
 
-    # print('start serializing funfams')
-    # pickle.dump(funfam_entries, open('data\\ff3.p', 'wb'))
-    # print('done serializing funfams')
+    print('start serializing funfams')
+    pickle.dump(funfam_entries, open('data\\ff4.p', 'wb'))
+    print('done serializing funfams')
 
     # with open('used_uniprot_ids_similarity', 'a') as the_file:
     #     for u_id in uniprot_ids:
