@@ -348,10 +348,12 @@ class FunFam:
                                                       self.predictions_cluster_coeff[member.id])
 
             data_member = []
-            for threshold in np.linspace(0.01,1,4):
-                cum_predictions = cum_scores > threshold
-                clust_predictions = clust_scores > threshold
-                for prediction in [cum_predictions, clust_predictions]:
+            thresholds_cum = np.linspace(0,40,4)
+            thresholds_clust = np.linspace(0.01,1,4)
+            methods = [(cum_scores,thresholds_cum), (clust_scores,thresholds_clust)]
+            for scores, thresholds in methods:
+                for threshold in thresholds:
+                    prediction = scores >= threshold
                     trues = sum(prediction)
                     falses = sum((prediction == False))
                     tp = sum(prediction & annotation)
@@ -365,7 +367,7 @@ class FunFam:
 
             data.append(data_member)
 
-        out = pd.DataFrame(columns=['fpr_cum001','tpr_cum001','fpr_clust001','tpr_clust001','fpr_cum034','tpr_cum034','fpr_clust034','tpr_clust034','fpr_cum067','tpr_cum067','fpr_clust067','tpr_clust067','fpr_cum100','tpr_cum100','fpr_clust100','tpr_clust100'], data = data)
+        out = pd.DataFrame(columns=['fpr_cum1','tpr_cum1','fpr_clust1','tpr_clust1','fpr_cum02','tpr_cum2','fpr_clust2','tpr_clust2','fpr_cum3','tpr_cum3','fpr_clust3','tpr_clust3','fpr_cum4','tpr_cum4','fpr_clust4','tpr_clust4'], data = data)
         return out.mean()
 
 
