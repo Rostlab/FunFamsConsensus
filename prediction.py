@@ -178,7 +178,7 @@ def main():
     confusion_matrices = pd.DataFrame(columns=["funfam", "uniprot", "fp_ccs", "tp_ccs", "fn_ccs", "tn_ccs", "fp_cc", "tp_cc", "fn_cc", "tn_cc", "fp_ccs_cons", "tp_ccs_cons", "fn_ccs_cons", "tn_ccs_cons", "fp_cc_cons", "tp_cc_cons", "fn_cc_cons", "tn_cc_cons"])
 
     tpr_fpr_values =  pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], index=index)
-    tpr_fpr_values_base = pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], index=index)
+    tpr_fpr_values_base = pd.DataFrame(columns=['fpr_cum001','tpr_cum001','fpr_clust001','tpr_clust001','fpr_cum034','tpr_cum034','fpr_clust034','tpr_clust034','fpr_cum067','tpr_cum067','fpr_clust067','tpr_clust067','fpr_cum100','tpr_cum100','fpr_clust100','tpr_clust100'], index=index)
     
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():

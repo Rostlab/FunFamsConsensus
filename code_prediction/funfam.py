@@ -342,17 +342,30 @@ class FunFam:
                 continue
 
             annotation = self.map_from_alignment_to_sequence(member.aligned_sequence,
-                                                             self.binding_sites[member.id]).astype(int)
+                                                             self.binding_sites[member.id])
             cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
             clust_scores = self.map_score_to_sequence(member.aligned_sequence,
                                                       self.predictions_cluster_coeff[member.id])
 
-            fpr_cum, tpr_cum, thresholds_clust = roc_curve(annotation, cum_scores)
-            fpr_clust, tpr_clust, thresholds_clust = roc_curve(annotation, clust_scores)
+            data_member = []
+            for threshold in np.linspace(0.01,1,3):
+                cum_predictions = cum_scores > threshold
+                clust_predictions = clust_scores > threshold
+                for prediction in [cum_predictions, clust_predictions]:
+                    trues = sum(prediction)
+                    falses = sum((prediction == False))
+                    tp = sum(prediction & annotation)
+                    fp = trues - tp
+                    fn = sum((prediction == False) & annotation)
+                    tn = falses - fn
+                    tpr = tp / (tp + fn) if (tp + fn) != 0 else 1  # tpr == cov
+                    fpr = fp / (fp + tn)
 
-            data.append([fpr_cum, tpr_cum, fpr_clust, tpr_clust])
+                    data_member.extend([tpr,fpr])
 
-        out = pd.DataFrame(columns=['fpr_cum','tpr_cum','fpr_clust','tpr_clust'], data = data)
+            data.append(data_member)
+
+        out = pd.DataFrame(columns=['fpr_cum001','tpr_cum001','fpr_clust001','tpr_clust001','fpr_cum034','tpr_cum034','fpr_clust034','tpr_clust034','fpr_cum067','tpr_cum067','fpr_clust067','tpr_clust067','fpr_cum100','tpr_cum100','fpr_clust100','tpr_clust100'], data = data)
         return out.mean()
 
 
