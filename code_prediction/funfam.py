@@ -272,6 +272,42 @@ class FunFam:
                     j += 1
 
             return (output)
+        
+    def get_consensus_roc(self):
+        data = []
+        for i,member in enumerate(self.members):
+            if not member.binding_annotation:
+                continue
+            annotation = self.map_from_alignment_to_sequence(member.aligned_sequence,
+                                                             self.binding_sites[member.id]).astype(int)
+            cum_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence,
+                                                                  self.predictions_cum_scores['consensus']),
+            clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence,
+                                                                    self.binding_sites['consensus'])
+
+            member_data = []
+            for prediction in [cum_predictions, clust_predictions]:
+                if type(prediction) == tuple:
+                    print(prediction)
+                    prediction = prediction[0]
+                # print(prediction)
+                trues = sum(prediction)
+                falses = sum((prediction == False))
+                tp = sum(prediction & annotation)
+                fp = trues - tp
+                fn = sum((prediction == False) & annotation)
+                tn = falses - fn
+                tpr = tp / (tp + fn) if (tp + fn) != 0 else 1  # tpr == cov
+                fpr = fp / (fp + tn)
+
+                member_data.append(fpr)
+                member_data.append(tpr)
+
+            data.append(member_data)
+        out = pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], data=data)
+        return out.mean()
+
+
 
     def get_consensus_tpr_fpr(self, uniprot_id):
         for i, member in enumerate(self.members):
@@ -457,7 +493,7 @@ class FunFam:
             # eval_cum_cons = self.compute_eval(self.predictions_cum_scores['consensus'],self.binding_sites[member.id])
             # eval_clust_cons = self.compute_eval(self.predictions_cluster_coeff['consensus'],self.binding_sites[member.id])
 
-            if self.name == '17793' and member.id == 'O35031':
+            if self.name == '669' and member.id == 'P21570':
                 p = True
                 print(self.name, member.id)
                 s = ''.join([x for x in member.aligned_sequence if x != '-'])

@@ -177,6 +177,8 @@ def main():
 
     confusion_matrices = pd.DataFrame(columns=["funfam", "uniprot", "fp_ccs", "tp_ccs", "fn_ccs", "tn_ccs", "fp_cc", "tp_cc", "fn_cc", "tn_cc", "fp_ccs_cons", "tp_ccs_cons", "fn_ccs_cons", "tn_ccs_cons", "fp_cc_cons", "tp_cc_cons", "fn_cc_cons", "tn_cc_cons"])
 
+    tpr_fpr_values =  pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], index=index)
+
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -233,6 +235,7 @@ def main():
 
         # for consensus:
         if funfam.num_binding_members > 1:  # previously included all sequences
+            tpr_fpr_values.loc[i] = funfam.get_consensus_roc()
             for p in confusion:
                 confusion_matrices.loc[m] = p
                 m += 1
@@ -284,6 +287,8 @@ def main():
     print('without consensus:')
     print('shape of evaluation df:', evaluation_means_no_cons.shape)
     print('\t'.join(map(str, evaluation_means_no_cons.mean())))
+    print("mean roc values:")
+    print(tpr_fpr_values.mean())
     print("auroc:")
     print('\t'.join(map(str, mean_auroc_values.mean())))
     print("mean performance transferred annotations:")
