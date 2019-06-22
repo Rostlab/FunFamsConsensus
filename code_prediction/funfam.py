@@ -305,7 +305,7 @@ class FunFam:
 
 
 
-    def get_consensus_tpr_fpr(self, uniprot_id):
+    def get_consensus_tpr_fpr(self, uniprot_id): #depreciated!
         for i, member in enumerate(self.members):
             if not member.binding_annotation:
                 continue
@@ -334,6 +334,27 @@ class FunFam:
                     data.append(tpr)
 
                 return data
+
+    def get_base_roc(self):
+        data = []
+        for i,member in enumerate(self.members):
+            if not member.binding_annotation:
+                continue
+
+            annotation = self.map_from_alignment_to_sequence(member.aligned_sequence,
+                                                             self.binding_sites[member.id]).astype(int)
+            cum_scores = self.map_score_to_sequence(member.aligned_sequence, self.predictions_cum_scores[member.id])
+            clust_scores = self.map_score_to_sequence(member.aligned_sequence,
+                                                      self.predictions_cluster_coeff[member.id])
+
+            fpr_cum, tpr_cum, thresholds_clust = roc_curve(annotation, cum_scores)
+            fpr_clust, tpr_clust, thresholds_clust = roc_curve(annotation, clust_scores)
+
+            data.append([fpr_cum, tpr_cum, fpr_clust, tpr_clust])
+
+        out = pd.DataFrame(columns=['fpr_cum','tpr_cum','fpr_clust','tpr_clust'], data = data)
+        return out.mean()
+
 
     def get_tpr_fpr(self, uniprot_id):
         for i,member in enumerate(self.members):
