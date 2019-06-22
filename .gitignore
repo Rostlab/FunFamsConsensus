@@ -1,4 +1,5 @@
 /output/*
+/code_similarity/analyse_bindPredict_results.py
 /get_pfam_mapping.py
 /code_similarity/__pycache__/*
 /code_prediction/__pycache__/*
