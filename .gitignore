@@ -1,5 +1,7 @@
+/output/*
 /get_pfam_mapping.py
 /code_similarity/__pycache__/*
+/code_prediction/__pycache__/*
 /code_similarity/test.py
 /data/pdbmap
 *.sh
