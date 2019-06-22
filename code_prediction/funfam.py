@@ -556,6 +556,8 @@ class FunFam:
             # print(self.name,member.id,member.evaluation_values)
             member.evaluation_consensus = (eval_cum_cons + eval_clust_cons)
 
+
+
             confusion_matrices.append(confusion_matrix_cum + confusion_matrix_clust + confusion_matrix_cum_cons + confusion_matrix_clust_cons)
 
         data = [member.evaluation_values for member in self.members if member.binding_annotation]

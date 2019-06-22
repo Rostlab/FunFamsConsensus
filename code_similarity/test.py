@@ -7,15 +7,17 @@ from Bio.Align.Applications import ClustalwCommandline
 from sklearn.metrics import precision_score, accuracy_score, recall_score, f1_score, roc_auc_score, matthews_corrcoef
 import pandas as pd
 #
-# path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\bindPredict_performance.txt'
-# data = pd.read_csv(path, sep=' ', header=0, engine='python')
-#
-#
-# prod = ((data['tp'] + data['fp']) * (data['tp'] + data['fn']) * (data['tn'] + data['fp']) * (data['tn'] + data['fn']))
-# mcc = (data['tp'] * data['tn'] - data['fp'] * data['fn']) / prod ** (0.5) #if prod != 0 else 0
-# data['mcc'] = mcc*100
-#
-# print(data.mean())
+path = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\bindPredict_performance.txt'
+data = pd.read_csv(path, sep=' ', header=0, engine='python')
+
+
+prod = ((data['tp'] + data['fp']) * (data['tp'] + data['fn']) * (data['tn'] + data['fp']) * (data['tn'] + data['fn']))
+mcc = (data['tp'] * data['tn'] - data['fp'] * data['fn']) / prod ** (0.5) #if prod != 0 else 0
+data['mcc'] = mcc*100
+
+print(data.mean())
+
+
 def eval_cm(tp, fp, fn, tn, type):
     prec = tp / (tp + fp) if (tp + fp) != 0 else 1
     cov = tp / (tp + fn) if (tp + fn) != 0 else 1

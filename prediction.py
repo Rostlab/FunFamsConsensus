@@ -38,6 +38,12 @@ def main():
     print("\tfunfam data file:", args.funfams_with_sites)
     print("[ARGUMENTS END]")
 
+
+    path = '/mnt/project/funfams/FunFam/bindPredict_performance.txt'
+    df = pd.read_csv(path, sep=' ', header=0, engine='python')
+    list_of_bindPredict_proteins = list(df['id'])
+    evaluation_bindPredict = []
+
     funfams = dict()
 
     valid_ids = get_valid_ids(args.uniprot_ids)
