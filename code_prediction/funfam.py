@@ -348,7 +348,7 @@ class FunFam:
                                                       self.predictions_cluster_coeff[member.id])
 
             data_member = []
-            for threshold in np.linspace(0.01,1,3):
+            for threshold in np.linspace(0.01,1,4):
                 cum_predictions = cum_scores > threshold
                 clust_predictions = clust_scores > threshold
                 for prediction in [cum_predictions, clust_predictions]:
