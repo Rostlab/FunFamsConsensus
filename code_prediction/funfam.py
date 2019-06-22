@@ -288,7 +288,7 @@ class FunFam:
             member_data = []
             for prediction in [cum_predictions, clust_predictions]:
                 if type(prediction) == tuple:
-                    print(prediction)
+                    #print(prediction)
                     prediction = prediction[0]
                 # print(prediction)
                 trues = sum(prediction)
