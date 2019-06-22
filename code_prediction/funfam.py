@@ -284,7 +284,7 @@ class FunFam:
                                                                   self.predictions_cum_scores['consensus'])
 
             clust_predictions = self.map_from_alignment_to_sequence(member.aligned_sequence,
-                                                                    self.binding_sites['consensus'])
+                                                                    self.predictions_cluster_coeff['consensus'])
 
             member_data = []
             for prediction in [cum_predictions, clust_predictions]:
