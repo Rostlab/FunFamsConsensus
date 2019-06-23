@@ -439,9 +439,9 @@ class FunFam:
 
         if p:
             print(m, 'prec:', prec, 'cov:', cov, 'F1:', F1)
-            print('\ttrue positives:',(annotation & predictions).nonzero()[0])
-            print('\tfalse positives:', (np.logical_not(annotation) & predictions).nonzero()[0])
-            print('\tfalse negatives:', (annotation & np.logical_not(predictions)).nonzero()[0])
+            print('\ttrue positives:','+'.join((annotation & predictions).nonzero()[0].astype(str)))
+            print('\tfalse positives:', '+'.join((np.logical_not(annotation) & predictions).nonzero()[0].astype(str)))
+            print('\tfalse negatives:', '+'.join((annotation & np.logical_not(predictions)).nonzero()[0].astype(str)))
             #print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).astype(str)))
             #print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).astype(str)))
 
