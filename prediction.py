@@ -184,6 +184,8 @@ def main():
     path = '/mnt/project/funfams/bindPredict_performance.txt'
     df = pd.read_csv(path, sep=' ', header=0, engine='python')
     list_of_bindPredict_proteins = list(df['id'])
+    dropped_bind_predict_sequences = 0
+    print("number of bind predict ids:",len(list_of_bindPredict_proteins))
     evaluation_bindPredict = pd.DataFrame(index=range(0,114),columns=["prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
 
     # iterate through FunFam objects to compute evaluation metrics
@@ -203,6 +205,10 @@ def main():
         aurocs = funfam.compute_mean_auroc()
         mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
 
+        if len(funfam.members) == 1:
+            if funfam.members[0].binding_annotation:
+                if funfam.members[0].id in list_of_bindPredict_proteins:
+                    dropped_bind_predict_sequences +=1
 
         if funfam.name == '1999':
             roc_data = funfam.get_tpr_fpr('P9WHE9')
@@ -311,6 +317,7 @@ def main():
     print(evaluation_transferred_annotations.mean())
     print("evaluation bindPredict:")
     print(evaluation_bindPredict.isnull().any(axis=1).shape)
+    print("sequences in bind predict ids that were not used (only funfam member):", dropped_bind_predict_sequences)
     print(evaluation_bindPredict.mean())
     evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval.csv'), index=False)
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
