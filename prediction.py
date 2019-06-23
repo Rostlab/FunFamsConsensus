@@ -265,9 +265,9 @@ def main():
 
         for k, member in enumerate(funfam.members):
             if member.id in list_of_bindPredict_proteins:
-                z+=1
                 bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
                 evaluation_bindPredict.loc[z] = bindPredict_member_eval
+                z += 1
 
             try:
                 evaluation_per_seq.loc[eval_per_seq_entries] = [funfam.name, member.id, member.evaluation_values[2],
@@ -310,7 +310,7 @@ def main():
     print("mean performance transferred annotations:")
     print(evaluation_transferred_annotations.mean())
     print("evaluation bindPredict:")
-    print(evaluation_bindPredict)
+    print(evaluation_bindPredict.mean())
     evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval.csv'), index=False)
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
