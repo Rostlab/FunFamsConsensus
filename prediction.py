@@ -134,6 +134,7 @@ def main():
     j = 0
     m = 1
     z = 0
+    eval_per_seq_full = 0
     eval_per_seq_entries = 0
     index = list(range(1, len(funfams.keys()) + 1))
     columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
@@ -188,6 +189,7 @@ def main():
     no_annotation_bind_predict_sequences = 0
     print("number of bind predict ids:",len(list_of_bindPredict_proteins))
     evaluation_bindPredict = pd.DataFrame(index=range(0,114),columns=["prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
+    evaluation_per_seq_full = []
 
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
@@ -278,7 +280,9 @@ def main():
                 bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
                 evaluation_bindPredict.loc[z] = bindPredict_member_eval
                 z += 1
-
+            if funfam.num_binding_members > 1:
+                evaluation_per_seq_full.loc[eval_per_seq_full] = [funfam.name, member.id, *member.evaluation_values, *member.evaluation_consensus]
+                eval_per_seq_full += 1
             try:
                 evaluation_per_seq.loc[eval_per_seq_entries] = [funfam.name, member.id, member.evaluation_values[2],
                                                                 member.evaluation_values[7],
@@ -305,6 +309,8 @@ def main():
         j += len(funfam.evaluation['F1_cum'])
         i += 1
 
+    evaluation_per_seq_full = pd.DataFrame(data=evaluation_per_seq_full,columns=["funfam","uniprot_id","prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
+
     print('mean of: precision, coverage, F1 score, accuracy, mcc for cum and clust')
     print('shape of evaluation df:', evaluation_means.shape)
     print('\t'.join(map(str, evaluation_means.mean())))
@@ -319,6 +325,9 @@ def main():
     print('\t'.join(map(str, mean_auroc_values.mean())))
     print("mean performance transferred annotations:")
     print(evaluation_transferred_annotations.mean())
+    print("mean full evaluation per seq:")
+    print(evaluation_per_seq_full.shape)
+    print(evaluation_per_seq_full.mean())
     print("evaluation bindPredict:")
     print("nan rows:",sum(evaluation_bindPredict.isnull().any(axis=1)))
     print("sequences in bind predict ids that were not used (only funfam member):", dropped_bind_predict_sequences)
@@ -368,6 +377,7 @@ def main():
     confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'), index=False)
     evaluation_full.to_csv(os.path.join(args.output_dir, 'evaluation_full_new.tsv'),
                            sep="\t", index=False)
+    evaluation_per_seq_full.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq_full.tsv'), index=False)
     evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
                               sep="\t", index=False)
     evaluation_new_consensus.to_csv(
