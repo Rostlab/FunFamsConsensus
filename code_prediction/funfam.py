@@ -439,9 +439,9 @@ class FunFam:
 
         if p:
             print(m)
-            print('\ttrue positives:',(annotation & predictions).nonzero())
-            print('\tfalse positives:', (np.logical_not(annotation) & predictions).nonzero())
-            print('\tfalse negatives:', (annotation & np.logical_not(predictions)).nonzero())
+            print('\ttrue positives:',(annotation & predictions).nonzero()[0])
+            print('\tfalse positives:', (np.logical_not(annotation) & predictions).nonzero()[0])
+            print('\tfalse negatives:', (annotation & np.logical_not(predictions)).nonzero()[0])
             #print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).astype(str)))
             #print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).astype(str)))
 
@@ -529,7 +529,7 @@ class FunFam:
             # eval_cum_cons = self.compute_eval(self.predictions_cum_scores['consensus'],self.binding_sites[member.id])
             # eval_clust_cons = self.compute_eval(self.predictions_cluster_coeff['consensus'],self.binding_sites[member.id])
 
-            if self.name == '669' and member.id == 'P84844':
+            if self.name == '13268' and member.id == 'P85314':
                 p = True
                 print(self.name, member.id)
                 s = ''.join([x for x in member.aligned_sequence if x != '-'])
