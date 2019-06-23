@@ -525,7 +525,7 @@ class FunFam:
             # eval_cum_cons = self.compute_eval(self.predictions_cum_scores['consensus'],self.binding_sites[member.id])
             # eval_clust_cons = self.compute_eval(self.predictions_cluster_coeff['consensus'],self.binding_sites[member.id])
 
-            if self.name == '669' and member.id == 'P21570':
+            if self.name == '669' and member.id == 'P84844':
                 p = True
                 print(self.name, member.id)
                 s = ''.join([x for x in member.aligned_sequence if x != '-'])
