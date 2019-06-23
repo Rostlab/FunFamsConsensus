@@ -438,7 +438,7 @@ class FunFam:
         #auroc = roc_auc_score(annotation, predictions)
 
         if p:
-            print(m, prec, cov, F1)
+            print(m, 'prec:', prec, 'cov:', cov, 'F1:', F1)
             print('\ttrue positives:',(annotation & predictions).nonzero()[0])
             print('\tfalse positives:', (np.logical_not(annotation) & predictions).nonzero()[0])
             print('\tfalse negatives:', (annotation & np.logical_not(predictions)).nonzero()[0])
