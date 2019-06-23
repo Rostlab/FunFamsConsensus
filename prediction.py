@@ -338,7 +338,8 @@ def main():
     print("sequences in bind predict ids that were not used (only funfam member):", dropped_bind_predict_sequences)
     print("sequences in bidn predict ids that have no annotation:", no_annotation_bind_predict_sequences)
     print(evaluation_bindPredict.mean())
-    evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval.csv'), index=False)
+    cons_cutoff_string = ''.join(str(args.cons_cutoff).split('.'))
+    evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval_'+cons_cutoff_string+'.csv'), index=False)
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
           standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))
@@ -382,7 +383,7 @@ def main():
     confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'), index=False)
     evaluation_full.to_csv(os.path.join(args.output_dir, 'evaluation_full_new.tsv'),
                            sep="\t", index=False)
-    evaluation_per_seq_full.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq_full.tsv'), index=False)
+    evaluation_per_seq_full.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq_full'+cons_cutoff_string+'.tsv'), index=False)
     evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
                               sep="\t", index=False)
     evaluation_new_consensus.to_csv(
