@@ -438,8 +438,8 @@ class FunFam:
         #auroc = roc_auc_score(annotation, predictions)
 
         if p:
-            print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).values.astype(str)))
-            print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).values.astype(str)))
+            print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).astype(str)))
+            print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).astype(str)))
 
         return ([prec, cov, F1, acc, mcc])
 
