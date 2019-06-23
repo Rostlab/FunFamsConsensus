@@ -281,8 +281,9 @@ def main():
                 evaluation_bindPredict.loc[z] = bindPredict_member_eval
                 z += 1
             if funfam.num_binding_members > 1:
-                evaluation_per_seq_full.loc[eval_per_seq_full] = [funfam.name, member.id, *member.evaluation_values, *member.evaluation_consensus]
-                eval_per_seq_full += 1
+                if member.binding_annotation:
+                    evaluation_per_seq_full.loc[eval_per_seq_full] = [funfam.name, member.id, *member.evaluation_values, *member.evaluation_consensus]
+                    eval_per_seq_full += 1
             try:
                 evaluation_per_seq.loc[eval_per_seq_entries] = [funfam.name, member.id, member.evaluation_values[2],
                                                                 member.evaluation_values[7],
