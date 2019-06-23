@@ -38,12 +38,6 @@ def main():
     print("\tfunfam data file:", args.funfams_with_sites)
     print("[ARGUMENTS END]")
 
-
-    path = '/mnt/project/funfams/FunFam/bindPredict_performance.txt'
-    df = pd.read_csv(path, sep=' ', header=0, engine='python')
-    list_of_bindPredict_proteins = list(df['id'])
-    evaluation_bindPredict = []
-
     funfams = dict()
 
     valid_ids = get_valid_ids(args.uniprot_ids)
@@ -139,6 +133,7 @@ def main():
     i = 1
     j = 0
     m = 1
+    z = 0
     eval_per_seq_entries = 0
     index = list(range(1, len(funfams.keys()) + 1))
     columns = ['prec_cum', 'cov_cum', 'F1_cum', 'acc_cum', 'mcc_cum', 'prec_clust', 'cov_clust', 'F1_clust', 'acc_clust', 'mcc_clust']
@@ -185,7 +180,12 @@ def main():
 
     tpr_fpr_values =  pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], index=index)
     tpr_fpr_values_base = pd.DataFrame(columns=['fpr_cum1','tpr_cum1','fpr_clust1','tpr_clust1','fpr_cum02','tpr_cum2','fpr_clust2','tpr_clust2','fpr_cum3','tpr_cum3','fpr_clust3','tpr_clust3','fpr_cum4','tpr_cum4','fpr_clust4','tpr_clust4'], index=index)
-    
+
+    path = '/mnt/project/funfams/bindPredict_performance.txt'
+    df = pd.read_csv(path, sep=' ', header=0, engine='python')
+    list_of_bindPredict_proteins = list(df['id'])
+    evaluation_bindPredict = pd.DataFrame(index=range(0,114),columns=["prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
+
     # iterate through FunFam objects to compute evaluation metrics
     for ff_id, funfam in funfams.items():
         if len(funfam.members) < 1:
@@ -262,7 +262,13 @@ def main():
                 no_correct_prediction_clust.append(sum(funfam.members_with_no_correct_prediction_clust) / len(
                     funfam.members_with_no_correct_prediction_clust))
 
+
         for k, member in enumerate(funfam.members):
+            if member.id in list_of_bindPredict_proteins:
+                z+=1
+                bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
+                evaluation_bindPredict.loc[z] = bindPredict_member_eval
+
             try:
                 evaluation_per_seq.loc[eval_per_seq_entries] = [funfam.name, member.id, member.evaluation_values[2],
                                                                 member.evaluation_values[7],
@@ -303,6 +309,9 @@ def main():
     print('\t'.join(map(str, mean_auroc_values.mean())))
     print("mean performance transferred annotations:")
     print(evaluation_transferred_annotations.mean())
+    print("evaluation bindPredict:")
+    print(evaluation_bindPredict)
+    evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval.csv'), index=False)
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
           standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
           standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))
