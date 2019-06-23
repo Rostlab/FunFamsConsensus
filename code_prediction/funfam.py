@@ -533,7 +533,7 @@ class FunFam:
                 real_id = member.id.split('_')[0]
             else:
                 real_id = member.id
-            if self.name == '115552' and real_id == 'Q1JU72':
+            if self.name == '12462' and real_id == 'P00698':
                 p = True
                 print(self.name, member.id)
                 s = ''.join([x for x in member.aligned_sequence if x != '-'])
