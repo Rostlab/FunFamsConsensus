@@ -276,7 +276,11 @@ def main():
 
 
         for k, member in enumerate(funfam.members):
-            if member.id in list_of_bindPredict_proteins:
+            if '_' in member.id:
+                real_id = member.id.split('_')[0]
+            else:
+                real_id = member.id
+            if real_id in list_of_bindPredict_proteins:
                 bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
                 evaluation_bindPredict.loc[z] = bindPredict_member_eval
                 z += 1
