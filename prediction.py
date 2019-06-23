@@ -310,6 +310,7 @@ def main():
     print("mean performance transferred annotations:")
     print(evaluation_transferred_annotations.mean())
     print("evaluation bindPredict:")
+    print(evaluation_bindPredict.shape)
     print(evaluation_bindPredict.mean())
     evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval.csv'), index=False)
     print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
