@@ -206,7 +206,7 @@ def main():
         aurocs = funfam.compute_mean_auroc()
         mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
 
-        if len(funfam.members) == 1
+        if len(funfam.members) == 1:
             if funfam.members[0].binding_annotation:
                 if funfam.members[0].id in list_of_bindPredict_proteins:
                     dropped_bind_predict_sequences +=1
