@@ -21,7 +21,7 @@ from FunFams.code_similarity.file_reader import FunFamReader, read_uniprot_bindi
 
 
 def main():
-    groups = ['funfam', 'ec', 'pfam']
+    groups = ['funfam', 'ec', 'pfam', 'prosite']
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
     parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
@@ -38,6 +38,7 @@ def main():
                         help="command to call clustalw on this system")
     parser.add_argument("-pickle", dest="pickle_file", help="for debugging: read FunFam data from pickle file")
     parser.add_argument("-pfam_map", dest="uniprot_pfam_file", help="if groupby == pfam")
+    parser.add_argument("-prosite_map", dest="uniprot_prosite_file", help="if groupby == prosite")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -101,7 +102,7 @@ def main():
     #     for u_id in uniprot_ids:
     #         the_file.write(u_id+'\n')
 
-    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file)
+    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file, args.uniprot_prosite_file)
 
     similarities = []
     num_used_entries = 0

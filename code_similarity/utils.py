@@ -109,7 +109,7 @@ def multiple_alignment(sequences, path, group_id, clustalw_command):
     return (align)
 
 
-def get_group_mapping(funfam_entries, groupby, limit, pfam_file):
+def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
     mapping = defaultdict(list)
     used_uniprot_ids = defaultdict(list)
     used_limit_ids = defaultdict(list)
@@ -168,6 +168,21 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file):
             for pfam_id in pfam_ids_to_add:
                 mapping[pfam_id].append(entry)
 
+    elif groupby == 'prosite':
+        uniprot_prosite_mapping = read_uniprot_prosite_mapping(prosite_file)
+        for entry in funfam_entries:
+            prosite_ids_to_add = set()
+            prosite_set = uniprot_prosite_mapping.get(entry.binding_site_id)
+            if prosite_set is None:
+                continue
+            for prosite_id,start,end in prosite_set:
+                start = int(start)
+                end = int(end)
+                if start >= entry.start and end <= entry.end:
+                    prosite_ids_to_add.add(prosite_id)
+            for prosite_id in prosite_ids_to_add:
+                mapping[prosite_id].append(entry)
+
     return mapping
 
 
@@ -185,3 +200,16 @@ def read_uniprot_pfam_mapping(file):
             uniprot_pfam_mapping[uniprot_id].add((start, end, pfam_id))
 
     return uniprot_pfam_mapping
+
+def read_uniprot_prosite_mapping(path):
+    uniprot_prosite_map = defaultdict(list)
+
+    with open(path, 'r') as f:
+        for line in f:
+            line_split = line.split(',')
+            prosite_id = line_split[0]
+            uniprot_id = line_split[1]
+            start, end = line_split[2:]
+            uniprot_prosite_map[uniprot_id].append((prosite_id, start, end))
+
+    return uniprot_prosite_map
