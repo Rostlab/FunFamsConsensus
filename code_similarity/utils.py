@@ -66,6 +66,11 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
         alignment = multiple_alignment(sequences, alignment_path, 'pfam_family_' + group, clustalw_command)
         alignment_dict = SeqIO.to_dict(alignment)
 
+    if grouping_keyword == 'prosite':
+        sequences = [entry.sequence for entry in entries]
+        alignment = multiple_alignment(sequences, alignment_path, 'prosite_group_' + group, clustalw_command)
+        alignment_dict = SeqIO.to_dict(alignment)
+
     binding_sites = []
     used_entries = []
     for i, entry in enumerate(entries):
@@ -77,6 +82,8 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
             entry.aligned_sequence_ec = alignment_dict.get(str(i))
         if grouping_keyword == 'pfam':
             entry.aligned_sequence_pfam = alignment_dict.get(str(i))
+        if grouping_keyword == 'prosite':
+            entry.aligned_sequence_prosite = alignment_dict.get(str(i))
 
         entry.map_binding_sites(grouping_keyword)
 
@@ -86,6 +93,8 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
             binding_sites.append(entry.mapped_sites_ec)
         elif grouping_keyword == 'pfam':
             binding_sites.append(entry.mapped_sites_pfam)
+        elif grouping_keyword == 'prosite':
+            binding_sites.append(entry.mapped_sites_prosite)
 
     return (used_entries, multiple_similarity(binding_sites))
 
