@@ -16,7 +16,7 @@ import numpy as np
 import pickle
 from itertools import chain
 from collections import defaultdict
-from FunFams.code_similarity.utils import process_funfam_entries, similarity, get_group_mapping
+from FunFams.code_similarity.utils import process_funfam_entries, similarity, get_group_mapping, standard_error
 from FunFams.code_similarity.file_reader import FunFamReader, read_uniprot_binding_site_mapping
 
 
@@ -121,7 +121,7 @@ def main():
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
     num_used_entries = sum((len(x[1][0]) for x in similarities))
 
-    print('similarity:', scores[num_members != 1].mean(), '\nnumber of groups:', len(scores[num_members != 1]))
+    print('similarity:', scores[num_members != 1].mean(),'+-', standard_error(scores[num_member != 1]), '\nnumber of groups:', len(scores[num_members != 1]))
     print('used entries:', num_used_entries)
 
 

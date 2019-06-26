@@ -5,6 +5,8 @@
 
 """
 import os
+import numpy as np
+import math
 from random import shuffle
 from collections import defaultdict
 from Bio import SeqIO, AlignIO
@@ -12,6 +14,10 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Align.Applications import ClustalwCommandline
 
+def standard_error(x):
+    sd = np.std(x, ddof=1)
+    se = sd / math.sqrt(len(x))
+    return (se)
 
 def process_funfam_entries(funfam_entries, uniprot_binding_site_mapping):
     relevant_entries = list()
