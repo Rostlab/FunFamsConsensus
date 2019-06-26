@@ -121,7 +121,7 @@ def main():
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
     num_used_entries = sum((len(x[1][0]) for x in similarities))
 
-    print('similarity:', scores[num_members != 1].mean(),'+-', standard_error(scores[num_member != 1]), '\nnumber of groups:', len(scores[num_members != 1]))
+    print('similarity:', scores[num_members != 1].mean(),'+-', standard_error(scores[num_members != 1]), '\nnumber of groups:', len(scores[num_members != 1]))
     print('used entries:', num_used_entries)
 
 
