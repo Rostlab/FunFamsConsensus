@@ -201,8 +201,10 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
 
     if groupby == 'funfam-on-pfam-subset':
         used_for_pfam = get_pfam_mapping(pfam_file, funfam_entries, mapping)
+        temp_list = [x for x in used_for_pfam.values()]
+        set_of_entries = set([item for sublist in temp_list for item in sublist])
         for entry in funfam_entries:
-            if entry in used_for_pfam.values():
+            if entry in set_of_entries:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     return mapping
