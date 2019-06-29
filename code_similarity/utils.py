@@ -248,6 +248,8 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
     entries2 = set(chain(*group_mapping2.values()))
     common_entries = entries1.union(entries2)
 
+    print(len(entries1), len(entries2), len(common_entries))
+
     #2)delete non commons from gm1
     to_delete1 = set()
     for key,entries in group_mapping1.items():
