@@ -116,7 +116,7 @@ def main():
         sim = similarity(group, entries, args.grouping_keyword, args.limit_keyword, args.alignment_path,
                          args.clustalw_command)
         similarities.append((group, sim))
-        
+
     print(similarities[0])
 
     scores = np.array([x[1][1] for x in similarities if x is not None])
@@ -129,8 +129,8 @@ def main():
     print('used entries new:', num_used_entries_new)
 
     with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
-        for data in [x[0] for x in similarities[1] if len(x[0]) is not 1]:
-            #f.write(superfamily+','+funfam+','+e_id+'\n')
-            f.write(','.join(map(str,data))+'\n')
+        for data in [x[1] for x in similarities]:
+            for superfamily, funfam, e_id in data[0]:
+                f.write(superfamily+','+funfam+','+e_id+'\n')
 
 if __name__ == '__main__': main()
