@@ -110,7 +110,7 @@ def main():
     group_mapping2 = get_group_mapping(funfam_entries, 'funfams-on-pfam-subset', args.limit_keyword, args.uniprot_pfam_file,
                                       args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
 
-    group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)
+    group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)[0]
 
     similarities = []
     num_used_entries = 0
