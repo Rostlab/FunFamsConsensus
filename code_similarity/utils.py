@@ -232,7 +232,7 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file, f
 def get_entries_to_remove(mapping):
     entries_to_drop = set()
     for key, entries in mapping.items():
-        if len(entries) < 2:
+        if len(entries) == 1:
             entries_to_drop.update(entries)
     return entries_to_drop
 
@@ -266,6 +266,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
     for key, entry in to_delete2:
         group_mapping2[key].remove(entry)
 
+    #3)+4) delete groups that are too small
     for i in range(0,500):
         remove1 = get_entries_to_remove(group_mapping1)
         for entry_to_remove in remove1:
@@ -275,6 +276,21 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
         for entry_to_remove in remove2:
             delete_from_mapping(group_mapping1, entry_to_remove)
             delete_from_mapping(group_mapping2, entry_to_remove)
+
+    #look for empty groups
+    groups_to_remove1 = set()
+    for key,entries in group_mapping1.items():
+        if not entries:
+            groups_to_remove1.add(key)
+    for group in groups_to_remove1:
+        del group_mapping1[group]
+
+    groups_to_remove2 = set()
+    for key,entries in group_mapping2.items():
+        if not entries:
+            groups_to_remove2.add(key)
+    for group in groups_to_remove2:
+        del group_mapping2[group]
 
     return (group_mapping1, group_mapping2)
 
