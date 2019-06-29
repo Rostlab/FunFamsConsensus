@@ -268,6 +268,27 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
     for key, entry in to_delete2:
         group_mapping2[key].remove(entry)
 
+    #delete duplicate uniprot ids per group gm1
+    to_delete1 = set()
+    for key,entries in group_mapping1.items():
+        used_uniprot_ids1 = set()
+        for entry in entries:
+            if entry.binding_site_id in used_uniprot_ids1:
+                to_delete1.add((key,entry))
+            used_uniprot_ids1.add(entry.binding_site_id)
+    for key, entry in to_delete1:
+        group_mapping1[key].remove(entry)
+
+    to_delete2 = set()
+    for key,entries in group_mapping2.items():
+        used_uniprot_ids2 = set()
+        for entry in entries:
+            if entry.binding_site_id in used_uniprot_ids2:
+                to_delete2.add((key,entry))
+            used_uniprot_ids2.add(entry.binding_site_id)
+    for key, entry in to_delete2:
+        group_mapping2[key].remove(entry)
+
     #3)+4) delete groups that are too small
     for i in range(0,500):
         remove1 = get_entries_to_remove(group_mapping1)
