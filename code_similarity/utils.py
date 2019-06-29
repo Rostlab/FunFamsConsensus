@@ -109,7 +109,7 @@ def read_used_entries(file):
     with open(file, 'r') as f:
         for line in f:
             line_split = line.split(',')
-            entries.add(line_split)
+            entries.add(tuple(line_split))
     return entries
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
@@ -209,19 +209,19 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file, f
     if groupby == 'funfam-on-pfam-subset':
         used_for_pfam = read_used_entries(file_entries_to_use)
         for entry in funfam_entries:
-            if entry in used_for_pfam:
+            if (entry.superfamily, entry.funfam, entry.id) in used_for_pfam:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     if groupby == 'funfam-on-prosite-subset':
         used_for_prosite = read_used_entries(file_entries_to_use)
         for entry in funfam_entries:
-            if entry in used_for_prosite:
+            if (entry.superfamily, entry.funfam, entry.id) in used_for_prosite:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     if groupby == 'funfam-on-ec-subset':
         used_for_ec = read_used_entries(file_entries_to_use)
         for entry in funfam_entries:
-            if entry in used_for_ec:
+            if (entry.superfamily, entry.funfam, entry.id) in used_for_ec:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     return mapping

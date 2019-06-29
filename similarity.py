@@ -131,7 +131,7 @@ def main():
     print('used entries:', num_used_entries)
     print('used entries new:', num_used_entries_new)
 
-    if args.write_used_entries == 'True':
+    if args.write_used_entries is not None and args.write_used_entries == 'True':
         with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
             for data in [x[1] for x in similarities]:
                 if len(data[0]) < 2:
