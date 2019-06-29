@@ -40,6 +40,7 @@ def main():
     parser.add_argument("-pfam_map", dest="uniprot_pfam_file", help="if groupby == pfam")
     parser.add_argument("-prosite_map", dest="uniprot_prosite_file", help="if groupby == prosite")
     parser.add_argument("-entries", dest="file_entries_to_use", help="if only some entries should be used")
+    parser.add_argument("-write_used_entries", dest="write_used_entries",help="print the used entries")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -130,12 +131,13 @@ def main():
     print('used entries:', num_used_entries)
     print('used entries new:', num_used_entries_new)
 
-    with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
-        for data in [x[1] for x in similarities]:
-            if len(data[0]) < 2:
-                #print('small funfam')
-                continue
-            for superfamily, funfam, e_id in data[0]:
-                f.write(superfamily+','+funfam+','+e_id+'\n')
+    if args.write_used_entries == 'True':
+        with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
+            for data in [x[1] for x in similarities]:
+                if len(data[0]) < 2:
+                    #print('small funfam')
+                    continue
+                for superfamily, funfam, e_id in data[0]:
+                    f.write(superfamily+','+funfam+','+e_id+'\n')
 
 if __name__ == '__main__': main()
