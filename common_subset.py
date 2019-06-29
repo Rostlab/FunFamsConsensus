@@ -1,4 +1,5 @@
 from collections import defaultdict
+from itertools import chain
 
 def read_used_entries(file):
     entries = set()
@@ -54,65 +55,129 @@ path_uniprot_prosite = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioi
 path_out_pfam = r'C:\Users\Linus\LRZ Sync+Share\UniversitätMünchen\Bioinformatik\6. Semester\Bachelorarbeit\pfam_subset.txt'
 
 funfam_entries = read_used_entries(path_funfam_entries)
-#pfam_entries = read_used_entries(path_pfam_entries)
+pfam_entries = read_used_entries(path_pfam_entries)
 uniprot_pfam = read_uniprot_pfam_mapping(path_uniprot_pfam)
 uniprot_prosite = read_uniprot_prosite_mapping(path_uniprot_prosite)
+
+
+
+# remove_from_funfam_entries = set()
+# for entry in funfam_entries:
+#     if (entry[0], entry[1], entry[2]) not in pfam_entries:
+#         remove_from_funfam_entries.add(entry)
+# funfam_entries.difference_update(remove_from_funfam_entries)
+#
+# remove_from_pfam_entries = set()
+# for entry in pfam_entries:
+#     remove = True
+#     for entry_f in funfam_entries:
+#         if (entry_f[0], entry_f[1], entry_f[2]) == entry:
+#             remove_from_pfam_entries.add(entry_f)
+#             break
+# pfam_entries.difference_update(remove_from_pfam_entries)
+
+# for entry in pfam_entries.difference(funfam_entries):
+#     funfam_entries.remove(entry)
+#     pfam_entries.remove(entry)
 
 print("constructing mappings...")
 seq_to_funfam = defaultdict(list)
 (seq_to_funfam[x[2]].append((x[0],[1])) for x in funfam_entries)
 
 seq_to_uniprot = defaultdict(list)
-(seq_to_uniprot[x[2]].append(x[3]) for x in funfam_entries)
 uniprot_to_seq = defaultdict(list)
-(seq_to_uniprot[x[3]].append(x[2]) for x in funfam_entries)
+for superfamily, funfam, seq_id, uniprot_id in funfam_entries:
+    seq_to_uniprot[seq_id].append(uniprot_id)
+    uniprot_to_seq[uniprot_id].append(seq_id)
+#print(len(seq_to_uniprot), len(set(chain(*seq_to_uniprot.values()))))
+#print(len(uniprot_to_seq), len(set(chain(*uniprot_to_seq.values()))))
+
+
+new_pfam_entries = set()
+for entry in pfam_entries:
+    uniprot_ids = seq_to_uniprot[entry[2]]
+    #print(entry[2],uniprot_ids)
+    for uniprot_id in uniprot_ids:
+        new_pfam_entries.add(entry+(uniprot_id,))
+
+print(len(new_pfam_entries))
+entries = funfam_entries.symmetric_difference(new_pfam_entries)
+print("number of entries in both groups:", len(entries))
 
 funfam_to_seq = defaultdict(list)
-(funfam_to_seq[x[1]].append(x[2]) for x in funfam_entries)
-
 pfam_to_seq = defaultdict(list)
-#(pfam_to_seq[v[2]].extend(uniprot_to_seq(k)) for k,v in uniprot_pfam.values())
-
 seq_to_pfam = defaultdict(list)
-# for x in pfam_entries:
-#     uniprot_ids = seq_to_uniprot[x[2]]
-#     for uniprot_id in uniprot_ids:
-#         pfam_ids = uniprot_pfam[uniprot_id]
-#         seq_to_pfam[x[2]].extend(pfam_ids)
 
-for entry in funfam_entries:
+for entry in entries:
     superfamily, funfam, e_id, uniprot_id = entry
-    pfam_id = uniprot_pfam[uniprot_id][2]
-    seq_to_pfam[e_id].append(pfam_id)
-    pfam_to_seq[pfam_id].append(e_id)
+    pfam_ids = uniprot_pfam[uniprot_id]
+    for start, end, pfam_id in pfam_ids:
+        seq_to_pfam[e_id].append(pfam_id)
+        pfam_to_seq[pfam_id].append(e_id)
+    funfam_to_seq[(superfamily, funfam)].append(e_id)
+
+print("number of groups funfam:", len(funfam_to_seq), len(set(chain(*funfam_to_seq.values()))))
+print("number of groups pfam:", len(pfam_to_seq), len(set(chain(*pfam_to_seq.values()))))
 
 i = 0
-print("start pruning...")
+print("start pruning...", len(funfam_to_seq),len(set(chain(*funfam_to_seq.values()))),len(pfam_to_seq), len(set(chain(*pfam_to_seq.values()))))
 while True:
     i += 1
     remove_due_to_funfam = check_sizes(funfam_to_seq)
     remove_due_to_pfam = check_sizes(pfam_to_seq)
-    if not remove_due_to_funfam and not remove_due_to_pfam:
+    #print(remove_due_to_pfam)
+    #print(remove_due_to_pfam)
+    if False:#not remove_due_to_funfam and not remove_due_to_pfam:
         break
     else:
         for entry in remove_due_to_funfam:
             pfam_ids = seq_to_pfam[entry]
             for pfam_id in pfam_ids:
-                pfam_to_seq[pfam_id].remove(entry)
-                if not pfam_to_seq[pfam_id]:
-                    del pfam_to_seq[pfam_id]
-        for entry in remove_due_to_pfam:
+                try:
+                    pfam_to_seq[pfam_id].remove(entry)
+                    if not pfam_to_seq[pfam_id]:
+                        del pfam_to_seq[pfam_id]
+                except ValueError:
+                    print(entry)
+                    continue
             funfams = seq_to_funfam[entry]
             for superfamily, funfam in funfams:
-                funfam_to_seq[(superfamily, funfam)].remove(entry)
-                if not funfam_to_seq[(superfamily, funfam)]:
-                    del funfam_to_seq[(superfamily, funfam)]
+                try:
+                    funfam_to_seq[(superfamily, funfam)].remove(entry)
+                    if not funfam_to_seq[(superfamily, funfam)]:
+                        del funfam_to_seq[(superfamily, funfam)]
+                except ValueError:
+                    print(entry)
+                    continue
+        for entry in remove_due_to_pfam:
+            pfam_ids = seq_to_pfam[entry]
+            for pfam_id in pfam_ids:
+                try:
+                    pfam_to_seq[pfam_id].remove(entry)
+                    if not pfam_to_seq[pfam_id]:
+                        del pfam_to_seq[pfam_id]
+                except ValueError:
+                    print(entry)
+                    continue
+            funfams = seq_to_funfam[entry]
+            for superfamily, funfam in funfams:
+                try:
+                    funfam_to_seq[(superfamily, funfam)].remove(entry)
+                    if not funfam_to_seq[(superfamily, funfam)]:
+                        del funfam_to_seq[(superfamily, funfam)]
+                except ValueError:
+                    print(entry)
+                    continue
 
-    print("finished iteration: ", i)
+    if i == 500:
+        break
+   # print("iteration: ", i, len(funfam_to_seq), len(pfam_to_seq))
 
 print("done")
+print(len(funfam_to_seq),len(set(chain(*funfam_to_seq.values()))),len(pfam_to_seq), len(set(chain(*pfam_to_seq.values()))))
 with open(path_out_pfam, 'w') as f:
-    for k,v in funfam_to_seq:
-        f.write(k[0]+','+k[1]+','+v+'\n')
+    for k,v in funfam_to_seq.items():
+        for e_id in v:
+            f.write(k[0]+','+k[1]+','+e_id+'\n')
 
 
