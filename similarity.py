@@ -107,7 +107,7 @@ def main():
 
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file,
                                       args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
-    group_mapping2 = get_group_mapping(funfam_entries, 'funfam-on-pfam-subset', args.limit_keyword, args.uniprot_pfam_file,
+    group_mapping2 = get_group_mapping(funfam_entries, 'pfam', args.limit_keyword, args.uniprot_pfam_file,
                                       args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
 
     group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)[0]
