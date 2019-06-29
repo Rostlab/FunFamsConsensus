@@ -108,6 +108,7 @@ def read_used_entries(file):
     entries = set()
     with open(file, 'r') as f:
         for line in f:
+            line = line[:1] #remove line-break
             line_split = line.split(',')
             entries.add(tuple(line_split))
     print("number of entries read from file:",len(entries), "example entry:\n",list(entries)[0])
