@@ -94,9 +94,9 @@ def main():
         funfam_entries = pickle.load(open(args.pickle_file, 'rb'))
         print("done reading.")
 
-    print('start serializing funfams')
-    pickle.dump(funfam_entries, open('data\\ff4.p', 'wb'))
-    print('done serializing funfams')
+    # print('start serializing funfams')
+    # pickle.dump(funfam_entries, open('data\\ff4.p', 'wb'))
+    # print('done serializing funfams')
 
     # with open('used_uniprot_ids_similarity', 'a') as the_file:
     #     for u_id in uniprot_ids:
@@ -116,6 +116,8 @@ def main():
         sim = similarity(group, entries, args.grouping_keyword, args.limit_keyword, args.alignment_path,
                          args.clustalw_command)
         similarities.append((group, sim))
+        
+    print(similarities[0])
 
     scores = np.array([x[1][1] for x in similarities if x is not None])
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
