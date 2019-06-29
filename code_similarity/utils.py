@@ -93,7 +93,7 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
 
         entry.map_binding_sites(grouping_keyword)
 
-        if grouping_keyword == 'funfam':
+        if grouping_keyword == 'funfam' or grouping_keyword in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
             binding_sites.append(entry.mapped_sites_funfam)
         elif grouping_keyword == 'ec':
             binding_sites.append(entry.mapped_sites_ec)
