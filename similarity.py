@@ -21,7 +21,7 @@ from FunFams.code_similarity.file_reader import FunFamReader, read_uniprot_bindi
 
 
 def main():
-    groups = ['funfam', 'ec', 'pfam', 'prosite']
+    groups = ['funfam', 'ec', 'pfam', 'prosite', 'funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
     parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
