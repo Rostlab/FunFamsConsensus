@@ -83,7 +83,7 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
         if entry.binding_site_id in used_ids:  # omit entries from already used uniprot ids
             continue
         used_ids.append(entry.binding_site_id)
-        used_entries.append((entry.superfamily, entry.funfam, entry.id))
+        used_entries.append((entry.superfamily, entry.funfam, entry.id, entry.binding_site_id))
         if grouping_keyword == 'ec':
             entry.aligned_sequence_ec = alignment_dict.get(str(i))
         if grouping_keyword == 'pfam':

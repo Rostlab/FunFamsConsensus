@@ -137,7 +137,7 @@ def main():
                 if len(data[0]) < 2:
                     #print('small funfam')
                     continue
-                for superfamily, funfam, e_id in data[0]:
-                    f.write(superfamily+','+funfam+','+e_id+'\n')
+                for superfamily, funfam, e_id, uniprot_id in data[0]:
+                    f.write(superfamily+','+funfam+','+e_id+','+uniprot_id+'\n')
 
 if __name__ == '__main__': main()
