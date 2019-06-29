@@ -16,7 +16,7 @@ import numpy as np
 import pickle
 from itertools import chain
 from collections import defaultdict
-from code_similarity.utils import process_funfam_entries, similarity, get_group_mapping, standard_error
+from code_similarity.utils import process_funfam_entries, similarity, get_group_mapping, standard_error,consolidate_group_mappings
 from code_similarity.file_reader import FunFamReader, read_uniprot_binding_site_mapping
 
 
@@ -105,7 +105,12 @@ def main():
     #         the_file.write(u_id+'\n')
 
 
-    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file, args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
+    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file,
+                                      args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
+    group_mapping2 = get_group_mapping(funfam_entries, 'funfams-on-pfam-subset', args.limit_keyword, args.uniprot_pfam_file,
+                                      args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
+
+    group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)
 
     similarities = []
     num_used_entries = 0

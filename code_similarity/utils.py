@@ -7,6 +7,7 @@
 import os
 import numpy as np
 import math
+from itertools import chain
 from random import shuffle
 from collections import defaultdict
 from Bio import SeqIO, AlignIO
@@ -227,6 +228,64 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file, f
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     return mapping
+
+def get_entries_to_remove(mapping):
+    entries_to_drop = set()
+    for key, entries in mapping.items():
+        if len(entries) < 2:
+            entries_to_drop.update(entries)
+    return entries_to_drop
+
+def consolidate_group_mappings(group_mapping1, group_mapping2):
+    #mapping group_id -> list of entries
+    #group_id = funfam id, ec number, pfam id, ...
+    #1)get list of common entries
+    #2)delete all that are not common from gm1 and gm2
+    #3)check if there are groups with <2 members left in both gm1 and gm2
+    #4)if yes, delete these members/groups from the other gm as well and goto 3)
+
+    entries1 = set(chain(*group_mapping1.values()))
+    entries2 = set(chain(*group_mapping2.values()))
+    common_entries = entries1.union(entries2)
+
+    #2)delete non commons from gm1
+    to_delete1 = set()
+    for key,entries in group_mapping1.values():
+        for entry in entries:
+            if entry not in common_entries:
+                to_delete1.add((key,entry))
+    for key, entry in to_delete1:
+        group_mapping1[key].remove(entry)
+
+    #2)delete non commons from gm2
+    to_delete2 = set()
+    for key,entries in group_mapping2.values():
+        for entry in entries:
+            if entry not in common_entries:
+                to_delete2.add((key,entry))
+    for key, entry in to_delete2:
+        group_mapping2[key].remove(entry)
+
+    for i in range(0,500):
+        remove1 = get_entries_to_remove(group_mapping1)
+        for entry_to_remove in remove1:
+            delete_from_mapping(group_mapping1, entry_to_remove)
+            delete_from_mapping(group_mapping2, entry_to_remove)
+        remove2 = get_entries_to_remove(group_mapping2)
+        for entry_to_remove in remove2:
+            delete_from_mapping(group_mapping1, entry_to_remove)
+            delete_from_mapping(group_mapping2, entry_to_remove)
+
+    return (group_mapping1, group_mapping2)
+
+def delete_from_mapping(mapping, entry):
+    for group, entries in mapping.values():
+        for entry2 in entries:
+            if entry2 == entry:
+                to_remove = (group, entry2)
+                break
+    mapping[to_remove[0]].remove(to_remove[1])
+
 
 def get_pfam_mapping(pfam_file, funfam_entries, mapping):
     uniprot_pfam_mapping = read_uniprot_pfam_mapping(pfam_file)
