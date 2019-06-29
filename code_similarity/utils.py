@@ -250,7 +250,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
 
     #2)delete non commons from gm1
     to_delete1 = set()
-    for key,entries in group_mapping1.values():
+    for key,entries in group_mapping1.items():
         for entry in entries:
             if entry not in common_entries:
                 to_delete1.add((key,entry))
@@ -259,7 +259,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
 
     #2)delete non commons from gm2
     to_delete2 = set()
-    for key,entries in group_mapping2.values():
+    for key,entries in group_mapping2.items():
         for entry in entries:
             if entry not in common_entries:
                 to_delete2.add((key,entry))
@@ -279,7 +279,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
     return (group_mapping1, group_mapping2)
 
 def delete_from_mapping(mapping, entry):
-    for group, entries in mapping.values():
+    for group, entries in mapping.items():
         for entry2 in entries:
             if entry2 == entry:
                 to_remove = (group, entry2)
