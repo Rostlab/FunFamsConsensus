@@ -246,7 +246,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
 
     entries1 = set(chain(*group_mapping1.values()))
     entries2 = set(chain(*group_mapping2.values()))
-    common_entries = entries1.union(entries2)
+    common_entries = entries1.intersection(entries2)
 
     print(len(entries1), len(entries2), len(common_entries))
 
