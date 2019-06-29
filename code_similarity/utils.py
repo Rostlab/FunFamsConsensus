@@ -110,6 +110,7 @@ def read_used_entries(file):
         for line in f:
             line_split = line.split(',')
             entries.add(tuple(line_split))
+    print("number of entries read from file:",len(entries), "first entry:\n",entries[0])
     return entries
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
