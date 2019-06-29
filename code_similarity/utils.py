@@ -283,7 +283,7 @@ def delete_from_mapping(mapping, entry):
     for group, entries in mapping.items():
         for entry2 in entries:
             if entry2 == entry:
-                to_remove.append(group, entry2)
+                to_remove.append((group, entry2))
                 break
     if to_remove:
         mapping[to_remove[0][0]].remove(to_remove[0][1])
