@@ -279,12 +279,14 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
     return (group_mapping1, group_mapping2)
 
 def delete_from_mapping(mapping, entry):
+    to_remove = []
     for group, entries in mapping.items():
         for entry2 in entries:
             if entry2 == entry:
-                to_remove = (group, entry2)
+                to_remove.append(group, entry2)
                 break
-    mapping[to_remove[0]].remove(to_remove[1])
+    if to_remove:
+        mapping[to_remove[0][0]].remove(to_remove[0][1])
 
 
 def get_pfam_mapping(pfam_file, funfam_entries, mapping):
