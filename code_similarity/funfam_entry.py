@@ -100,7 +100,7 @@ class FunFamEntry(object):
                     break
             out.append(bs + gaps - self.start + 1)
 
-        if group == "funfam":
+        if group == "funfam" or group in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
             self.mapped_sites_funfam = out
         elif group == "ec":
             self.mapped_sites_ec = out
