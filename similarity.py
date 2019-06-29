@@ -120,9 +120,14 @@ def main():
     scores = np.array([x[1][1] for x in similarities if x is not None])
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
     num_used_entries = sum((len(x[1][0]) for x in similarities))
+    num_used_entries_new = sum((len(x[1][0]) for x in similarities if len(x[1][0]) is not 1))
 
     print('similarity:', scores[num_members != 1].mean(),'+-', standard_error(scores[num_members != 1]), '\nnumber of groups:', len(scores[num_members != 1]))
     print('used entries:', num_used_entries)
+    print('used entries new:', num_used_entries_new)
 
+    with open(os.join.path(args.alignment_path, 'used_entries_'+args.grouping_keyword), 'w') as f:
+        for superfamily, funfam, e_id in [x[0] for x in similarity if len(x[1][0] is not 1)]:
+            f.write(superfamily+','+funfam+','+e_id+'\n')
 
 if __name__ == '__main__': main()
