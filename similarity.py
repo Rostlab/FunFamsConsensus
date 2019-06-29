@@ -126,9 +126,9 @@ def main():
     print('used entries:', num_used_entries)
     print('used entries new:', num_used_entries_new)
 
-    with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword), 'w') as f:
+    with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
         for data in [x[0] for x in similarities[1] if len(x[0]) is not 1]:
             #f.write(superfamily+','+funfam+','+e_id+'\n')
-            f.write(data+'\n')
+            f.write(','.join(map(str,data))+'\n')
 
 if __name__ == '__main__': main()
