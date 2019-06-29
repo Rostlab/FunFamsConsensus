@@ -169,19 +169,20 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
                     mapping[ec_id].append(entry)
 
     elif groupby == 'pfam':
-        uniprot_pfam_mapping = read_uniprot_pfam_mapping(pfam_file)
-        for entry in funfam_entries:
-            pfam_ids_to_add = set()
-            pfam_set = uniprot_pfam_mapping.get(entry.binding_site_id)
-            if pfam_set is None:
-                continue
-            for start,end,pfam_id in pfam_set:
-                start = int(start)
-                end = int(end)
-                if start >= entry.start and end <= entry.end:
-                    pfam_ids_to_add.add(pfam_id)
-            for pfam_id in pfam_ids_to_add:
-                mapping[pfam_id].append(entry)
+        mapping = get_pfam_mapping(pfam_file, funfam_entries, mapping)
+        # uniprot_pfam_mapping = read_uniprot_pfam_mapping(pfam_file)
+        # for entry in funfam_entries:
+        #     pfam_ids_to_add = set()
+        #     pfam_set = uniprot_pfam_mapping.get(entry.binding_site_id)
+        #     if pfam_set is None:
+        #         continue
+        #     for start,end,pfam_id in pfam_set:
+        #         start = int(start)
+        #         end = int(end)
+        #         if start >= entry.start and end <= entry.end:
+        #             pfam_ids_to_add.add(pfam_id)
+        #     for pfam_id in pfam_ids_to_add:
+        #         mapping[pfam_id].append(entry)
 
     elif groupby == 'prosite':
         uniprot_prosite_mapping = read_uniprot_prosite_mapping(prosite_file)
@@ -197,6 +198,29 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
                     prosite_ids_to_add.add(prosite_id)
             for prosite_id in prosite_ids_to_add:
                 mapping[prosite_id].append(entry)
+
+    if groupby == 'funfam-on-pfam-subset':
+        used_for_pfam = get_pfam_mapping(pfam_file, funfam_entries, mapping)
+        for entry in funfam_entries:
+            if entry in used_for_pfam.values():
+                mapping[(entry.superfamily, entry.funfam)].append(entry)
+
+    return mapping
+
+def get_pfam_mapping(pfam_file, funfam_entries, mapping):
+    uniprot_pfam_mapping = read_uniprot_pfam_mapping(pfam_file)
+    for entry in funfam_entries:
+        pfam_ids_to_add = set()
+        pfam_set = uniprot_pfam_mapping.get(entry.binding_site_id)
+        if pfam_set is None:
+            continue
+        for start, end, pfam_id in pfam_set:
+            start = int(start)
+            end = int(end)
+            if start >= entry.start and end <= entry.end:
+                pfam_ids_to_add.add(pfam_id)
+        for pfam_id in pfam_ids_to_add:
+            mapping[pfam_id].append(entry)
 
     return mapping
 
