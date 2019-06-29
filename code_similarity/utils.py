@@ -104,6 +104,13 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
 
     return (used_entries, multiple_similarity(binding_sites))
 
+def read_used_entries(file):
+    entries = set()
+    with open(file, 'r') as f:
+        for line in f:
+            line_split = line.split(',')
+            entries.add(line_split)
+    return entries
 
 def multiple_alignment(sequences, path, group_id, clustalw_command):
     records = [SeqRecord(sequences[x], id=str(x)) for x in range(0, len(sequences))]
@@ -124,7 +131,7 @@ def multiple_alignment(sequences, path, group_id, clustalw_command):
     return (align)
 
 
-def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
+def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file, file_entries_to_use=None):
     mapping = defaultdict(list)
     used_uniprot_ids = defaultdict(list)
     used_limit_ids = defaultdict(list)
@@ -200,11 +207,21 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file):
                 mapping[prosite_id].append(entry)
 
     if groupby == 'funfam-on-pfam-subset':
-        used_for_pfam = get_pfam_mapping(pfam_file, funfam_entries, mapping)
-        temp_list = [x for x in used_for_pfam.values()]
-        set_of_entries = set([item for sublist in temp_list for item in sublist])
+        used_for_pfam = read_used_entries(file_entries_to_use)
         for entry in funfam_entries:
-            if entry in set_of_entries:
+            if entry in used_for_pfam:
+                mapping[(entry.superfamily, entry.funfam)].append(entry)
+
+    if groupby == 'funfam-on-prosite-subset':
+        used_for_prosite = read_used_entries(file_entries_to_use)
+        for entry in funfam_entries:
+            if entry in used_for_prosite:
+                mapping[(entry.superfamily, entry.funfam)].append(entry)
+
+    if groupby == 'funfam-on-ec-subset':
+        used_for_ec = read_used_entries(file_entries_to_use)
+        for entry in funfam_entries:
+            if entry in used_for_ec:
                 mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     return mapping

@@ -39,6 +39,7 @@ def main():
     parser.add_argument("-pickle", dest="pickle_file", help="for debugging: read FunFam data from pickle file")
     parser.add_argument("-pfam_map", dest="uniprot_pfam_file", help="if groupby == pfam")
     parser.add_argument("-prosite_map", dest="uniprot_prosite_file", help="if groupby == prosite")
+    parser.add_argument("-entries", dest="file_entries_to_use", help="if only some entries should be used")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -102,7 +103,8 @@ def main():
     #     for u_id in uniprot_ids:
     #         the_file.write(u_id+'\n')
 
-    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file, args.uniprot_prosite_file)
+
+    group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file, args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
 
     similarities = []
     num_used_entries = 0
@@ -131,7 +133,7 @@ def main():
     with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
         for data in [x[1] for x in similarities]:
             if len(data[0]) < 2:
-                print('small funfam')
+                #print('small funfam')
                 continue
             for superfamily, funfam, e_id in data[0]:
                 f.write(superfamily+','+funfam+','+e_id+'\n')
