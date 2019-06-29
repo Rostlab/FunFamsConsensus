@@ -130,7 +130,7 @@ def main():
 
     with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
         for data in [x[1] for x in similarities]:
-            if len(data[0] < 2):
+            if len(data[0]) < 2:
                 print('small funfam')
                 continue
             for superfamily, funfam, e_id in data[0]:
