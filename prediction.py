@@ -393,6 +393,5 @@ def main():
     #    os.path.join(args.output_dir, 'evaluation_consensus_annotation.tsv'), sep="\t",
     #    index=False)
 
-
 if __name__ == "__main__":
     main()
