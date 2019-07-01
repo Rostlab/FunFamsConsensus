@@ -18,7 +18,7 @@ def main():
     parser.add_argument('evc_folder', help='Folder with protein folders containing EVcouplings results')
     parser.add_argument('fasta_folder', help='Folder containing fasta sequences')
     parser.add_argument('id_file', help='File containing a list of ids to calculate scores for')
-    parser.add_argument('ec', help='Method used to calculate ECs [ec|di]')
+    parser.add_argument('ec', help='Method used to calculate ECs [evc|freecontact]')
     parser.add_argument('out_folder', help='Folder to write output to')
     args = parser.parse_args()
 
