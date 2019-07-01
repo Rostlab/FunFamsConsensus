@@ -56,6 +56,7 @@ TBD
     
  # References
 [1] Sillitoe I, Cuff AL, Dessailly BH, Dawson NL, Furnham N, Lee D, Lees JG, Lewis TE, Studer RA, Rentzsch R: New functional families (FunFams) in CATH to improve the mapping of conserved functional sites to 3D structures. Nucleic Acids Research 2012, 41(D1):D490-D498.
+
 [2] Marks, D. S., Colwell, L. J., Sheridan, R., Hopf, T. A., Pagnani, A., Zecchina, R., Sander, C. (2011). [Protein 3D Structure Computed from Evolutionary Sequence Variation](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0028766). PLoS ONE **6**(12): e28766.
 
 [3] Hopf, T. A., Schärfe, C. P. I., Rodrigues, J. P. G. L. M., Green, A. G., Kohlbacher, O., Sander, C., Bonvin, A. M. J. J., Debora S Marks, D.S. (2014) [Sequence co-evolution gives 3D contacts and structures of protein complexes](https://elifesciences.org/articles/03430). eLife; 3:e03430
