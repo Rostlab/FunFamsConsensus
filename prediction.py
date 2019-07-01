@@ -385,7 +385,7 @@ def main():
                            sep="\t", index=False)
     evaluation_per_seq_full.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq_full'+cons_cutoff_string+'.tsv'), index=False)
     #evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
-                              sep="\t", index=False)
+    #                          sep="\t", index=False)
     #evaluation_new_consensus.to_csv(
     #    os.path.join(args.output_dir, 'evaluation_new_consensus_' + str(
     #        args.cum_cutoff) + "_" + str(args.clust_cutoff) + ".tsv"), sep="\t", index=False)
