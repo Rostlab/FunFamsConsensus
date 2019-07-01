@@ -215,10 +215,10 @@ class FunFam:
 
         if sum(consensus) == 0:
             if method == "cum":
-                print(self.name, "no consensus prediction cum")
+                #print(self.name, "no consensus prediction cum")
                 self.consensus_has_prediction_cum = False
             elif method == "clust":
-                print(self.name, "no consensus prediction cum")
+                #print(self.name, "no consensus prediction cum")
                 self.consensus_has_prediction_clust = False
             return ()
         else:
@@ -437,13 +437,13 @@ class FunFam:
             #mcc = matthews_corrcoef(annotation, predictions)
         #auroc = roc_auc_score(annotation, predictions)
 
-        if p:
-            print(m, 'prec:', prec, 'cov:', cov, 'F1:', F1)
-            print('\ttrue positives:','+'.join((annotation & predictions).nonzero()[0].astype(str)))
-            print('\tfalse positives:', '+'.join((np.logical_not(annotation) & predictions).nonzero()[0].astype(str)))
-            print('\tfalse negatives:', '+'.join((annotation & np.logical_not(predictions)).nonzero()[0].astype(str)))
-            #print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).astype(str)))
-            #print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).astype(str)))
+        # if p:
+        #     print(m, 'prec:', prec, 'cov:', cov, 'F1:', F1)
+        #     print('\ttrue positives:','+'.join((annotation & predictions).nonzero()[0].astype(str)))
+        #     print('\tfalse positives:', '+'.join((np.logical_not(annotation) & predictions).nonzero()[0].astype(str)))
+        #     print('\tfalse negatives:', '+'.join((annotation & np.logical_not(predictions)).nonzero()[0].astype(str)))
+        #     #print(m, 'annotation:', len(annotation), ','.join(annotation.astype(int).astype(str)))
+        #     #print(m, 'predictions:', len(predictions), ','.join(predictions.astype(int).astype(str)))
 
         return ([prec, cov, F1, acc, mcc])
 
