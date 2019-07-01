@@ -182,13 +182,13 @@ def main():
     tpr_fpr_values =  pd.DataFrame(columns=['fpr_cum', 'tpr_cum', 'fpr_clust', 'tpr_clust'], index=index)
     tpr_fpr_values_base = pd.DataFrame(columns=['fpr_cum1','tpr_cum1','fpr_clust1','tpr_clust1','fpr_cum02','tpr_cum2','fpr_clust2','tpr_clust2','fpr_cum3','tpr_cum3','fpr_clust3','tpr_clust3','fpr_cum4','tpr_cum4','fpr_clust4','tpr_clust4'], index=index)
 
-    path = '/mnt/project/funfams/bindPredict_performance.txt'
-    df = pd.read_csv(path, sep=' ', header=0, engine='python')
-    list_of_bindPredict_proteins = list(df['id'])
-    dropped_bind_predict_sequences = 0
-    no_annotation_bind_predict_sequences = 0
-    print("number of bind predict ids:",len(list_of_bindPredict_proteins))
-    evaluation_bindPredict = pd.DataFrame(index=range(0,114),columns=["prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
+    # path = '/mnt/project/funfams/bindPredict_performance.txt'
+    # df = pd.read_csv(path, sep=' ', header=0, engine='python')
+    # list_of_bindPredict_proteins = list(df['id'])
+    # dropped_bind_predict_sequences = 0
+    # no_annotation_bind_predict_sequences = 0
+    # print("number of bind predict ids:",len(list_of_bindPredict_proteins))
+    # evaluation_bindPredict = pd.DataFrame(index=range(0,114),columns=["prec_cum","cov_cum","F1_cum", "acc_cum", "mcc_cum", "prec_clust","cov_clust","F1_clust", "acc_clust", "mcc_clust", "prec_cum_cons","cov_cum_cons","F1_cum_cons", "acc_cum_cons", "mcc_cum_cons", "prec_clust_cons","cov_clust_cons","F1_clust_cons", "acc_clust_cons","mcc_clust_cons"])
     evaluation_per_seq_full = []
 
     # iterate through FunFam objects to compute evaluation metrics
@@ -208,22 +208,22 @@ def main():
         aurocs = funfam.compute_mean_auroc()
         mean_auroc_values.loc[i] = [aurocs['cum'], aurocs['clust']]
 
-        if len(funfam.members) == 1:
-            if funfam.members[0].binding_annotation:
-                if funfam.members[0].id in list_of_bindPredict_proteins:
-                    dropped_bind_predict_sequences +=1
-            else:
-                if funfam.members[0].id in list_of_bindPredict_proteins:
-                    no_annotation_bind_predict_sequences +=1
+        # if len(funfam.members) == 1:
+        #     if funfam.members[0].binding_annotation:
+        #         if funfam.members[0].id in list_of_bindPredict_proteins:
+        #             dropped_bind_predict_sequences +=1
+        #     else:
+        #         if funfam.members[0].id in list_of_bindPredict_proteins:
+        #             no_annotation_bind_predict_sequences +=1
 
-        if funfam.name == '1999':
-            roc_data = funfam.get_tpr_fpr('P9WHE9')
-            print("data for roc curve of specific protein: fpr_cum tpr_cum fpr_clust tpr_clust")
-            print(roc_data)
-            consensus_roc_data = funfam.get_consensus_tpr_fpr('P9WHE9')
-            print("at consensus cut-off:",+args.cons_cutoff)
-            print("data for consensus roc: fpr_cum tpr_cum fpr_clust tpr_clust")
-            print(consensus_roc_data)
+        # if funfam.name == '1999':
+        #     roc_data = funfam.get_tpr_fpr('P9WHE9')
+        #     print("data for roc curve of specific protein: fpr_cum tpr_cum fpr_clust tpr_clust")
+        #     print(roc_data)
+        #     consensus_roc_data = funfam.get_consensus_tpr_fpr('P9WHE9')
+        #     print("at consensus cut-off:",+args.cons_cutoff)
+        #     print("data for consensus roc: fpr_cum tpr_cum fpr_clust tpr_clust")
+        #     print(consensus_roc_data)
 
         funfam.build_new_consensus()
         funfam.predictions_for_new_consensus(args.cum_cutoff, args.clust_cutoff)
@@ -280,10 +280,10 @@ def main():
                 real_id = member.id.split('_')[0]
             else:
                 real_id = member.id
-            if real_id in list_of_bindPredict_proteins:
-                bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
-                evaluation_bindPredict.loc[z] = bindPredict_member_eval
-                z += 1
+            # if real_id in list_of_bindPredict_proteins:
+            #     bindPredict_member_eval = member.evaluation_values + member.evaluation_consensus
+            #     evaluation_bindPredict.loc[z] = bindPredict_member_eval
+            #     z += 1
             if funfam.num_binding_members > 1:
                 if member.binding_annotation:
                     evaluation_per_seq_full.append([funfam.name, member.id, *member.evaluation_values, *member.evaluation_consensus])
@@ -322,76 +322,76 @@ def main():
     print('without consensus:')
     print('shape of evaluation df:', evaluation_means_no_cons.shape)
     print('\t'.join(map(str, evaluation_means_no_cons.mean())))
-    print("mean consensus roc values:")
-    print(tpr_fpr_values.mean())
-    print("mean base roc values:")
-    print(tpr_fpr_values_base.mean())
-    print("auroc:")
-    print('\t'.join(map(str, mean_auroc_values.mean())))
+    #print("mean consensus roc values:")
+    #print(tpr_fpr_values.mean())
+    #print("mean base roc values:")
+    #print(tpr_fpr_values_base.mean())
+    #print("auroc:")
+    #print('\t'.join(map(str, mean_auroc_values.mean())))
     print("mean performance transferred annotations:")
     print(evaluation_transferred_annotations.mean())
-    print("mean full evaluation per seq:")
-    print(evaluation_per_seq_full.shape)
-    print(evaluation_per_seq_full.mean())
-    print("evaluation bindPredict:")
-    print("nan rows:",sum(evaluation_bindPredict.isnull().any(axis=1)))
-    print("sequences in bind predict ids that were not used (only funfam member):", dropped_bind_predict_sequences)
-    print("sequences in bidn predict ids that have no annotation:", no_annotation_bind_predict_sequences)
-    print(evaluation_bindPredict.mean())
+    #print("mean full evaluation per seq:")
+    #print(evaluation_per_seq_full.shape)
+    #print(evaluation_per_seq_full.mean())
+    #print("evaluation bindPredict:")
+    #print("nan rows:",sum(evaluation_bindPredict.isnull().any(axis=1)))
+    #print("sequences in bind predict ids that were not used (only funfam member):", dropped_bind_predict_sequences)
+    #print("sequences in bidn predict ids that have no annotation:", no_annotation_bind_predict_sequences)
+    #print(evaluation_bindPredict.mean())
     cons_cutoff_string = ''.join(str(args.cons_cutoff).split('.'))
-    evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval_'+cons_cutoff_string+'.csv'), index=False)
-    print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
-          standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
-          standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))
-    print("cumulative couplings:\t", "F1 mean:", evaluation_means["F1_cum"].mean(), "F1 se:",
-          standard_error(evaluation_means["F1_cum"]))
-    print("\tbaseline:\t", "F1 mean:", evaluation_new_consensus["F1_cum_base"].mean(), "F1 se:",
-          standard_error(evaluation_new_consensus["F1_cum_base"]))
-    print("\tcoverage cum:", evaluation_means["cov_cum"].mean(), "se", standard_error(evaluation_means["cov_cum"]))
-    print("clustering coefficents:\t", "F1 mean:", evaluation_means["F1_clust"].mean(), "F1 se:",
-          standard_error(evaluation_means["F1_clust"]))
-    print("\tbaseline:\t", "F1 mean:", evaluation_new_consensus["F1_clust_base"].mean(), "F1 se:",
-          standard_error(evaluation_new_consensus["F1_clust_base"]))
-    print("\tcoverage clust:", evaluation_means["cov_clust"].mean(), "se",
-          standard_error(evaluation_means["cov_clust"]))
-    print("number of predicted binding residues cum:", sum(num_predicted_binding_sites_cum), "clust:",
-          sum(num_predicted_binding_sites_clust))
-    print("averages per family cov:", sum(num_predicted_binding_sites_cum) / len(num_predicted_binding_sites_cum),
-          "clust:", sum(num_predicted_binding_sites_clust) / len(num_predicted_binding_sites_clust))
-    print("average alignment length:", sum(len_alignment) / len(len_alignment))
-    print("num families used:", len(num_predicted_binding_sites_cum))
-    print(sum(num_predicted_binding_sites_cum) / len(num_predicted_binding_sites_cum),
-          sum(num_predicted_binding_sites_clust) / len(num_predicted_binding_sites_clust))
-    num_predicted_binding_sites_cum = np.array(num_predicted_binding_sites_cum)
-    num_predicted_binding_sites_clust = np.array(num_predicted_binding_sites_clust)
-    print("num families with more than zero predicted binding sites; cum:",
-          len(num_predicted_binding_sites_cum[num_predicted_binding_sites_cum > 0]), num_predicted_binding_sites_cum,
-          "\nclust:", len(num_predicted_binding_sites_clust[num_predicted_binding_sites_clust > 0]),
-          num_predicted_binding_sites_clust)
-    print("fraction of funfams with zero predictions; cum:",
-          len(num_predicted_binding_sites_cum[num_predicted_binding_sites_cum == 0]) / len(
-              num_predicted_binding_sites_cum), "\nclust:",
-          len(num_predicted_binding_sites_clust[num_predicted_binding_sites_clust == 0]) / len(
-              num_predicted_binding_sites_clust))
-    print("fraction of correct predictions; cum:", sum(fract_correct_cum) / len(fract_correct_cum), "clust:",
-          sum(fract_correct_clust) / len(fract_correct_clust))
-    print("fraction of sequences with no correct prediction; cum:",
-          sum(no_correct_prediction_cum) / len(no_correct_prediction_cum), "clust:",
-          sum(no_correct_prediction_clust) / len(no_correct_prediction_clust))
+    #evaluation_bindPredict.to_csv(os.path.join(args.output_dir, 'bindPredict_sequences_eval_'+cons_cutoff_string+'.csv'), index=False)
+    #print(standard_error(evaluation_means["prec_cum"]), standard_error(evaluation_means["cov_cum"]),
+    #      standard_error(evaluation_means["F1_cum"]), standard_error(evaluation_means["prec_clust"]),
+    #      standard_error(evaluation_means["cov_clust"]), standard_error(evaluation_means["F1_clust"]))
+    #print("cumulative couplings:\t", "F1 mean:", evaluation_means["F1_cum"].mean(), "F1 se:",
+    #      standard_error(evaluation_means["F1_cum"]))
+    #print("\tbaseline:\t", "F1 mean:", evaluation_new_consensus["F1_cum_base"].mean(), "F1 se:",
+    #      standard_error(evaluation_new_consensus["F1_cum_base"]))
+    #print("\tcoverage cum:", evaluation_means["cov_cum"].mean(), "se", standard_error(evaluation_means["cov_cum"]))
+    #print("clustering coefficents:\t", "F1 mean:", evaluation_means["F1_clust"].mean(), "F1 se:",
+    #      standard_error(evaluation_means["F1_clust"]))
+    #print("\tbaseline:\t", "F1 mean:", evaluation_new_consensus["F1_clust_base"].mean(), "F1 se:",
+    #     standard_error(evaluation_new_consensus["F1_clust_base"]))
+    #print("\tcoverage clust:", evaluation_means["cov_clust"].mean(), "se",
+    #      standard_error(evaluation_means["cov_clust"]))
+    #print("number of predicted binding residues cum:", sum(num_predicted_binding_sites_cum), "clust:",
+    #      sum(num_predicted_binding_sites_clust))
+    #print("averages per family cov:", sum(num_predicted_binding_sites_cum) / len(num_predicted_binding_sites_cum),
+    #      "clust:", sum(num_predicted_binding_sites_clust) / len(num_predicted_binding_sites_clust))
+    #print("average alignment length:", sum(len_alignment) / len(len_alignment))
+    #print("num families used:", len(num_predicted_binding_sites_cum))
+    #print(sum(num_predicted_binding_sites_cum) / len(num_predicted_binding_sites_cum),
+    #      sum(num_predicted_binding_sites_clust) / len(num_predicted_binding_sites_clust))
+    #num_predicted_binding_sites_cum = np.array(num_predicted_binding_sites_cum)
+    #num_predicted_binding_sites_clust = np.array(num_predicted_binding_sites_clust)
+    #print("num families with more than zero predicted binding sites; cum:",
+    #      len(num_predicted_binding_sites_cum[num_predicted_binding_sites_cum > 0]), num_predicted_binding_sites_cum,
+    #      "\nclust:", len(num_predicted_binding_sites_clust[num_predicted_binding_sites_clust > 0]),
+    #      num_predicted_binding_sites_clust)
+    #print("fraction of funfams with zero predictions; cum:",
+    #      len(num_predicted_binding_sites_cum[num_predicted_binding_sites_cum == 0]) / len(
+    #          num_predicted_binding_sites_cum), "\nclust:",
+    #      len(num_predicted_binding_sites_clust[num_predicted_binding_sites_clust == 0]) / len(
+    #          num_predicted_binding_sites_clust))
+    #print("fraction of correct predictions; cum:", sum(fract_correct_cum) / len(fract_correct_cum), "clust:",
+    #      sum(fract_correct_clust) / len(fract_correct_clust))
+    #print("fraction of sequences with no correct prediction; cum:",
+    #      sum(no_correct_prediction_cum) / len(no_correct_prediction_cum), "clust:",
+    #      sum(no_correct_prediction_clust) / len(no_correct_prediction_clust))
 
 
-    confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'), index=False)
+    #confusion_matrices.to_csv(os.path.join(args.output_dir, 'confusion_matrices.csv'), index=False)
     evaluation_full.to_csv(os.path.join(args.output_dir, 'evaluation_full_new.tsv'),
                            sep="\t", index=False)
     evaluation_per_seq_full.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq_full'+cons_cutoff_string+'.tsv'), index=False)
-    evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
+    #evaluation_per_seq.to_csv(os.path.join(args.output_dir, 'evaluation_per_seq.tsv'),
                               sep="\t", index=False)
-    evaluation_new_consensus.to_csv(
-        os.path.join(args.output_dir, 'evaluation_new_consensus_' + str(
-            args.cum_cutoff) + "_" + str(args.clust_cutoff) + ".tsv"), sep="\t", index=False)
-    evaluation_consensus_annotation.to_csv(
-        os.path.join(args.output_dir, 'evaluation_consensus_annotation.tsv'), sep="\t",
-        index=False)
+    #evaluation_new_consensus.to_csv(
+    #    os.path.join(args.output_dir, 'evaluation_new_consensus_' + str(
+    #        args.cum_cutoff) + "_" + str(args.clust_cutoff) + ".tsv"), sep="\t", index=False)
+    #evaluation_consensus_annotation.to_csv(
+    #    os.path.join(args.output_dir, 'evaluation_consensus_annotation.tsv'), sep="\t",
+    #    index=False)
 
 
 if __name__ == "__main__":

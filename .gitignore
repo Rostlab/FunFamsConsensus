@@ -1,3 +1,4 @@
+/code_other/*
 /output/*
 /code_similarity/analyse_bindPredict_results.py
 /get_pfam_mapping.py
