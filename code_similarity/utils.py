@@ -94,7 +94,7 @@ def similarity(group, entries, grouping_keyword, limit_keyword, alignment_path, 
 
         entry.map_binding_sites(grouping_keyword)
 
-        if grouping_keyword == 'funfam' or grouping_keyword in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
+        if grouping_keyword == 'funfam':# or grouping_keyword in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
             binding_sites.append(entry.mapped_sites_funfam)
         elif grouping_keyword == 'ec':
             binding_sites.append(entry.mapped_sites_ec)
@@ -209,23 +209,23 @@ def get_group_mapping(funfam_entries, groupby, limit, pfam_file, prosite_file, f
             for prosite_id in prosite_ids_to_add:
                 mapping[prosite_id].append(entry)
 
-    if groupby == 'funfam-on-pfam-subset':
-        used_for_pfam = read_used_entries(file_entries_to_use)
-        for entry in funfam_entries:
-            if (entry.superfamily, entry.funfam, entry.id) in used_for_pfam:
-                mapping[(entry.superfamily, entry.funfam)].append(entry)
-
-    if groupby == 'funfam-on-prosite-subset':
-        used_for_prosite = read_used_entries(file_entries_to_use)
-        for entry in funfam_entries:
-            if (entry.superfamily, entry.funfam, entry.id) in used_for_prosite:
-                mapping[(entry.superfamily, entry.funfam)].append(entry)
-
-    if groupby == 'funfam-on-ec-subset':
-        used_for_ec = read_used_entries(file_entries_to_use)
-        for entry in funfam_entries:
-            if (entry.superfamily, entry.funfam, entry.id) in used_for_ec:
-                mapping[(entry.superfamily, entry.funfam)].append(entry)
+    # if groupby == 'funfam-on-pfam-subset':
+    #     used_for_pfam = read_used_entries(file_entries_to_use)
+    #     for entry in funfam_entries:
+    #         if (entry.superfamily, entry.funfam, entry.id) in used_for_pfam:
+    #             mapping[(entry.superfamily, entry.funfam)].append(entry)
+    #
+    # if groupby == 'funfam-on-prosite-subset':
+    #     used_for_prosite = read_used_entries(file_entries_to_use)
+    #     for entry in funfam_entries:
+    #         if (entry.superfamily, entry.funfam, entry.id) in used_for_prosite:
+    #             mapping[(entry.superfamily, entry.funfam)].append(entry)
+    #
+    # if groupby == 'funfam-on-ec-subset':
+    #     used_for_ec = read_used_entries(file_entries_to_use)
+    #     for entry in funfam_entries:
+    #         if (entry.superfamily, entry.funfam, entry.id) in used_for_ec:
+    #             mapping[(entry.superfamily, entry.funfam)].append(entry)
 
     return mapping
 
@@ -290,7 +290,7 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
         group_mapping2[key].remove(entry)
 
     #3)+4) delete groups that are too small
-    for i in range(0,500):
+    while True:
         remove1 = get_entries_to_remove(group_mapping1)
         for entry_to_remove in remove1:
             delete_from_mapping(group_mapping1, entry_to_remove)
@@ -299,6 +299,8 @@ def consolidate_group_mappings(group_mapping1, group_mapping2):
         for entry_to_remove in remove2:
             delete_from_mapping(group_mapping1, entry_to_remove)
             delete_from_mapping(group_mapping2, entry_to_remove)
+        if len(remove1) == 0 and len(remove2) == 0:
+            break
 
     #look for empty groups
     groups_to_remove1 = set()

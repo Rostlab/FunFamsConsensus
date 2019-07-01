@@ -76,7 +76,7 @@ class FunFamEntry(object):
 
     def map_binding_sites(self, group):
         '''maps binding sites from the sequence to the ec alignment level'''
-        if group == "funfam" or group in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset', 'pfam-on-subset']:
+        if group == "funfam":# or group in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset', 'pfam-on-subset']:
             sequence = self.aligned_sequence_funfam
         elif group == "ec":
             sequence = self.aligned_sequence_ec
@@ -100,7 +100,7 @@ class FunFamEntry(object):
                     break
             out.append(bs + gaps - self.start + 1)
 
-        if group == "funfam" or group in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
+        if group == "funfam":# or group in ['funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset']:
             self.mapped_sites_funfam = out
         elif group == "ec":
             self.mapped_sites_ec = out

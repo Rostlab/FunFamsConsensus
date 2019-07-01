@@ -21,7 +21,7 @@ from code_similarity.file_reader import FunFamReader, read_uniprot_binding_site_
 
 
 def main():
-    groups = ['funfam', 'ec', 'pfam', 'prosite', 'funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset', 'pfam-on-subset']
+    groups = ['funfam', 'ec', 'pfam', 'prosite']#, 'funfam-on-ec-subset', 'funfam-on-pfam-subset', 'funfam-on-prosite-subset', 'pfam-on-subset']
     usage_string = 'python similarity.py'
     parser = argparse.ArgumentParser(description=__doc__, usage=usage_string)
     parser.add_argument("-families", dest="family_dir", help="directory with FunFam families", required=True)
@@ -39,8 +39,8 @@ def main():
     parser.add_argument("-pickle", dest="pickle_file", help="for debugging: read FunFam data from pickle file")
     parser.add_argument("-pfam_map", dest="uniprot_pfam_file", help="if groupby == pfam")
     parser.add_argument("-prosite_map", dest="uniprot_prosite_file", help="if groupby == prosite")
-    parser.add_argument("-entries", dest="file_entries_to_use", help="if only some entries should be used")
-    parser.add_argument("-write_used_entries", dest="write_used_entries",help="print the used entries")
+    #parser.add_argument("-entries", dest="file_entries_to_use", help="if only some entries should be used")
+    #parser.add_argument("-write_used_entries", dest="write_used_entries",help="print the used entries")
 
     args = parser.parse_args()
     print("[ARGUMENTS]")
@@ -106,16 +106,16 @@ def main():
 
 
     group_mapping = get_group_mapping(funfam_entries, args.grouping_keyword, args.limit_keyword, args.uniprot_pfam_file,
-                                      args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
-    group_mapping2 = get_group_mapping(funfam_entries, 'pfam', args.limit_keyword, args.uniprot_pfam_file,
-                                      args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
+                                      args.uniprot_prosite_file)#, file_entries_to_use=args.file_entries_to_use)
+    #group_mapping2 = get_group_mapping(funfam_entries, 'pfam', args.limit_keyword, args.uniprot_pfam_file,
+    #                                  args.uniprot_prosite_file, file_entries_to_use=args.file_entries_to_use)
 
-    group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)[0]
+    #group_mapping = consolidate_group_mappings(group_mapping, group_mapping2)[0]
 
     similarities = []
     num_used_entries = 0
 
-    print('number of groups:', len(group_mapping), '\nnumber of entries:', len(set(chain(*group_mapping.values()))))
+    #print('number of groups:', len(group_mapping), '\nnumber of entries:', len(set(chain(*group_mapping.values()))))
 
     for group, entries in group_mapping.items():
         if len(entries) < 2:
@@ -125,24 +125,24 @@ def main():
                          args.clustalw_command)
         similarities.append((group, sim))
 
-    print(similarities[0])
+    #print(similarities[0])
 
     scores = np.array([x[1][1] for x in similarities if x is not None])
     num_members = np.array([len(x[1][0]) for x in similarities if x is not None])
     num_used_entries = sum((len(x[1][0]) for x in similarities))
-    num_used_entries_new = sum((len(x[1][0]) for x in similarities if len(x[1][0]) is not 1))
+    #num_used_entries_non_single = sum((len(x[1][0]) for x in similarities if len(x[1][0]) is not 1))
 
     print('similarity:', scores[num_members != 1].mean(),'+-', standard_error(scores[num_members != 1]), '\nnumber of groups:', len(scores[num_members != 1]))
-    print('used entries:', num_used_entries)
-    print('used entries new:', num_used_entries_new)
+    #print('used entries:', num_used_entries)
+    #print('used entries new:', num_used_entries_non_single)
 
-    if args.write_used_entries is not None and args.write_used_entries == 'True':
-        with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
-            for data in [x[1] for x in similarities]:
-                if len(data[0]) < 2:
-                    #print('small funfam')
-                    continue
-                for superfamily, funfam, e_id, uniprot_id in data[0]:
-                    f.write(superfamily+','+funfam+','+e_id+','+uniprot_id+'\n')
+    # if args.write_used_entries is not None and args.write_used_entries == 'True':
+    #     with open(os.path.join(args.alignment_path, 'used_entries_'+args.grouping_keyword+'.txt'), 'w') as f:
+    #         for data in [x[1] for x in similarities]:
+    #             if len(data[0]) < 2:
+    #                 #print('small funfam')
+    #                 continue
+    #             for superfamily, funfam, e_id, uniprot_id in data[0]:
+    #                 f.write(superfamily+','+funfam+','+e_id+','+uniprot_id+'\n')
 
 if __name__ == '__main__': main()
